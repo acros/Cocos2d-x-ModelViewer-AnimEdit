@@ -26,6 +26,9 @@
     <ClCompile Include="..\Classes\ViewTarget.cpp">
       <Filter>ViewerUtils</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\UiHandler.cpp">
+      <Filter>ViewerUtils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -37,6 +40,9 @@
       <Filter>ViewerUtils</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\ViewTarget.h">
+      <Filter>ViewerUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UiHandler.h">
       <Filter>ViewerUtils</Filter>
     </ClInclude>
   </ItemGroup>

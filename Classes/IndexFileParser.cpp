@@ -4,7 +4,6 @@
 
 USING_NS_CC;
 
-
 AnimFileIndexList* IndexFileParser::parseIndexFile(const std::string& filePath)
 {
 	std::string contentStr = FileUtils::getInstance()->getStringFromFile(filePath);

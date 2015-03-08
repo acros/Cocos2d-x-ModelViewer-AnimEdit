@@ -1,5 +1,6 @@
 #include "HelloWorldScene.h"
 #include "ViewTarget.h"
+#include "UiHandler.h"
 
 USING_NS_CC;
 
@@ -9,22 +10,19 @@ Scene* ModelViewer::createScene(const std::string& filePath)
 
 	if (animList != nullptr)
 	{
-		// 'scene' is an autorelease object
 		auto scene = Scene::create();
 
-		// 'layer' is an autorelease object
+		//Add ui lay
+		auto hud = UiHandler::create();
+		scene->addChild(hud);
+
+		//Add model layer
 		auto layer = ModelViewer::create();
  		layer->initCamera();
 		layer->loadModel(*animList);
-		delete animList;
-
-// 		layer->initCamera();
-// 		layer->resetCamera();
-
-		// add layer as a child to scene
 		scene->addChild(layer);
 
-		// return the scene
+		delete animList;
 		return scene;
 	}
 
@@ -263,8 +261,11 @@ void ModelViewer::changeViewTarget(int stepLength)
 	}
 
 	addChild(m_ViewList.at(m_SpriteIndex)->getNode());
-
 	updateCameraSet();
+
+	UiHandler::getInstance()->setTitle(m_ViewList.at(m_SpriteIndex)->getTitle());
+	UiHandler::getInstance()->setModelName(m_ViewList.at(m_SpriteIndex)->getModelName());
+
 }
 
 void ModelViewer::updateCameraSet()

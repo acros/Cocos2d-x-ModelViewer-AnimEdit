@@ -23,6 +23,8 @@ public:
 
 	void	switchAnim(int step);
 
+	const std::string& getTitle()const;
+	const std::string& getModelName()const;
 	const std::string& getCurrAnimName()const;
 
 protected:
@@ -33,6 +35,8 @@ protected:
 
 	cocos2d::RefPtr<cocos2d::Sprite3D>	_Sprite3d;
 
+	std::string	_name;
+	std::string _modelName;
 
 	typedef cocos2d::Map<std::string, cocos2d::Animate3D*>::iterator	AnimMapIter;
 	typedef cocos2d::Map<std::string, cocos2d::Animate3D*>		AnimMap;

@@ -1,4 +1,5 @@
 #include "ViewTarget.h"
+#include "UiHandler.h"
 
 USING_NS_CC;
 
@@ -27,11 +28,14 @@ bool ViewTarget::load(const AnimFileIndex& fileIdx)
 
 	if (_Sprite3d)
 	{
+		_name = fileIdx.name;
+		_modelName = fileIdx.modelFile;
 		auto animation = Animation3D::create(fileIdx.animFile);
 		if (animation)
 		{
 			auto animate = Animate3D::create(animation);
 			_AnimList.insert("_ALL_",animate);
+			UiHandler::getInstance()->setAnimName("__ALL__");
 			_Sprite3d->runAction(RepeatForever::create(animate));
 
 			parseAnimSection(fileIdx,animation);
@@ -87,6 +91,8 @@ void ViewTarget::switchAnim(int step)
 
 	_Sprite3d->stopAllActions();
 	_Sprite3d->runAction(RepeatForever::create(_currAnim->second));
+
+	UiHandler::getInstance()->setAnimName(_currAnim->first);
 }
 
 void ViewTarget::parseAnimSection(const AnimFileIndex& animFile, Animation3D* anim)
@@ -103,4 +109,14 @@ void ViewTarget::parseAnimSection(const AnimFileIndex& animFile, Animation3D* an
 const std::string& ViewTarget::getCurrAnimName() const
 {
 	return _currAnim->first;
+}
+
+const std::string& ViewTarget::getTitle() const
+{
+	return _name;
+}
+
+const std::string& ViewTarget::getModelName() const
+{
+	return _modelName;
 }

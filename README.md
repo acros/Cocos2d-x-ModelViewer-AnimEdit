@@ -1,3 +1,20 @@
+##	Branch of OPERATION_SUPPORT	##
+For cocos2d-x after version 3.4
+
+Zhao Zhihui:
+	Load data from config.json
+	Use keyboard to switch model and animation
+
+	Add UI layout (Need cocos studio after version v2.1),show anim and model name.
+
+Keyboard:
+	Z		--	Prev Model
+	X		--	Next Model	
+	A		--	Prev Animation
+	S		--	Next Animation
+
+
+
 ## ModelViewer version 0.1 ##
 It is for cocos2d-x after version v3.3
 
@@ -22,15 +39,3 @@ MIDDLE_MOUSE_BUTTON    --- Scale Camera
 
 KEYBOARD_SPACE			--- Reset Camera
 
-
-
-##	Branch of OPERATION_SUPPORT	##
-Zhao Zhihui:
-	Load data from config.json
-	Use keyboard to switch model and animation
-
-Keyboard:
-	Z		--	Prev Model
-	X		--	Next Model 
-	A		--	Prev Animation
-	S		--	Next Animation
