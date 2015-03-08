@@ -21,3 +21,6 @@ RIGHT_MOUSE_BUTTON      --- Translate Camera
 MIDDLE_MOUSE_BUTTON    --- Scale Camera
 
 SPACE_KEYBOARD         ---  Reset Camera
+
+Z_KEYBOARD		--	Prev model
+X_KEYBOARD		--	Next model 
