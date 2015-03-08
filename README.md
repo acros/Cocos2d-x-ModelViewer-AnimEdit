@@ -20,7 +20,17 @@ RIGHT_MOUSE_BUTTON      --- Translate Camera
 
 MIDDLE_MOUSE_BUTTON    --- Scale Camera
 
-SPACE_KEYBOARD         ---  Reset Camera
+KEYBOARD_SPACE			--- Reset Camera
 
-Z_KEYBOARD		--	Prev model
-X_KEYBOARD		--	Next model 
+
+
+##	Branch of OPERATION_SUPPORT	##
+Zhao Zhihui:
+	Load data from config.json
+	Use keyboard to switch model and animation
+
+Keyboard:
+	Z		--	Prev Model
+	X		--	Next Model 
+	A		--	Prev Animation
+	S		--	Next Animation

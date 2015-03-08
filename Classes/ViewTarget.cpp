@@ -31,7 +31,10 @@ bool ViewTarget::load(const AnimFileIndex& fileIdx)
 		if (animation)
 		{
 			auto animate = Animate3D::create(animation);
+			_AnimList.insert("_ALL_",animate);
 			_Sprite3d->runAction(RepeatForever::create(animate));
+
+			parseAnimSection(fileIdx,animation);
 		}
 
 		AABB aabb = _Sprite3d->getAABB();
@@ -59,4 +62,45 @@ bool ViewTarget::load(const AnimFileIndex& fileIdx)
 cocos2d::Node* ViewTarget::getNode() const
 {
 	return _Sprite3d;
+}
+
+void ViewTarget::switchAnim(int step)
+{
+	//if (animName != _currAnim->first)
+	if (step == 0)
+		return;
+
+	if (step > 0 )
+	{
+		_currAnim++;
+		if (_currAnim == _AnimList.end()){
+			_currAnim = _AnimList.begin();
+		}		
+	}
+	else {
+		if (_currAnim == _AnimList.begin()){
+			_currAnim = (--_AnimList.end());
+		}
+		else
+			--_currAnim;
+	}
+
+	_Sprite3d->stopAllActions();
+	_Sprite3d->runAction(RepeatForever::create(_currAnim->second));
+}
+
+void ViewTarget::parseAnimSection(const AnimFileIndex& animFile, Animation3D* anim)
+{
+	for (auto it = animFile.animList.begin(); it != animFile.animList.end(); ++it){
+		auto animate = Animate3D::createWithFrames(anim, it->start, it->end);
+		_AnimList.insert(it->name, animate);
+	}
+
+	_currAnim = _AnimList.begin();
+
+}
+
+const std::string& ViewTarget::getCurrAnimName() const
+{
+	return _currAnim->first;
 }

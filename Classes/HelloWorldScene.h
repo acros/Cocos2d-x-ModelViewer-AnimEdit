@@ -39,7 +39,8 @@ protected:
     void updateCameraTransform();
     void resetCamera();
 
-	void changeViewTarget(int stepLength);
+	void changeViewTarget(int step);
+	void changeAnim(int step);
 
 	void updateCameraSet();
 

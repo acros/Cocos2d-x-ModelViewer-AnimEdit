@@ -205,20 +205,20 @@ void ModelViewer::onKeyPressedThis( EventKeyboard::KeyCode keycode, Event *event
     switch (keycode)
     {
     case EventKeyboard::KeyCode::KEY_SPACE:
-        {
             resetCamera();
-        }
         break;
 	case EventKeyboard::KeyCode::KEY_X:
-	{
-		changeViewTarget(1);
-	}
-	break;
+			changeViewTarget(1);
+		break;
 	case EventKeyboard::KeyCode::KEY_Z:
-	{
-		changeViewTarget(-1);
-	}
-	break;
+			changeViewTarget(-1);
+		break;
+	case EventKeyboard::KeyCode::KEY_A:
+			changeAnim(-1);
+		break;
+	case EventKeyboard::KeyCode::KEY_S:
+			changeAnim(1);
+		break;
     default:
         break;
     }
@@ -273,5 +273,10 @@ void ModelViewer::updateCameraSet()
 	_orginCenter.set(m_ViewList.at(m_SpriteIndex)->getCamCenter());
 
 	resetCamera();
+}
+
+void ModelViewer::changeAnim(int step)
+{
+	m_ViewList.at(m_SpriteIndex)->switchAnim(step);
 }
 

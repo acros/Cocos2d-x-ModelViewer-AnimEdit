@@ -16,18 +16,28 @@ public:
 
 	bool	load(const AnimFileIndex&	animFile);
 
-
 	cocos2d::Node*	getNode()const;
 
 	float	getCamDistance()const	{ return _orginDistance; }
-	const cocos2d::Vec3&	getCamCenter()const	{ return _orginCenter; }
+	const	cocos2d::Vec3&	getCamCenter()const	{ return _orginCenter; }
+
+	void	switchAnim(int step);
+
+	const std::string& getCurrAnimName()const;
+
 protected:
+	void	parseAnimSection(const AnimFileIndex&	animFile, cocos2d::Animation3D* anim);
 
 	float			_orginDistance;
 	cocos2d::Vec3	_orginCenter;
 
 	cocos2d::RefPtr<cocos2d::Sprite3D>	_Sprite3d;
 
+
+	typedef cocos2d::Map<std::string, cocos2d::Animate3D*>::iterator	AnimMapIter;
+	typedef cocos2d::Map<std::string, cocos2d::Animate3D*>		AnimMap;
+	AnimMap	_AnimList;
+	AnimMapIter _currAnim;
 };
 
 #endif
