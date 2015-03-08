@@ -10,6 +10,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ViewerUtils">
+      <UniqueIdentifier>{6b530705-a64d-409b-8eed-3c38976af259}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -17,6 +20,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="..\Classes\IndexFileParser.cpp">
+      <Filter>ViewerUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ViewTarget.cpp">
+      <Filter>ViewerUtils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -24,6 +33,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
+    <ClInclude Include="..\Classes\IndexFileParser.h">
+      <Filter>ViewerUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ViewTarget.h">
+      <Filter>ViewerUtils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

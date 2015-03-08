@@ -41,9 +41,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
     auto scene = ModelViewer::createScene(_modelFilePath);
-
-    // run
-    director->runWithScene(scene);
+	if (scene != nullptr)
+	{
+		director->runWithScene(scene);
+	}
 
     return true;
 }

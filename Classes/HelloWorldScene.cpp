@@ -1,23 +1,34 @@
 #include "HelloWorldScene.h"
+#include "ViewTarget.h"
 
 USING_NS_CC;
 
-Scene* ModelViewer::createScene(const std::string &filePath)
+Scene* ModelViewer::createScene(const std::string& filePath)
 {
-    // 'scene' is an autorelease object
-    auto scene = Scene::create();
+	auto animList = IndexFileParser::parseIndexFile(filePath);
 
-    // 'layer' is an autorelease object
-    auto layer = ModelViewer::create();
-    layer->loadModel(filePath);
-    layer->setCamera();
-    layer->resetCamera();
+	if (animList != nullptr)
+	{
+		// 'scene' is an autorelease object
+		auto scene = Scene::create();
 
-    // add layer as a child to scene
-    scene->addChild(layer);
+		// 'layer' is an autorelease object
+		auto layer = ModelViewer::create();
+ 		layer->initCamera();
+		layer->loadModel(*animList);
+		delete animList;
 
-    // return the scene
-    return scene;
+// 		layer->initCamera();
+// 		layer->resetCamera();
+
+		// add layer as a child to scene
+		scene->addChild(layer);
+
+		// return the scene
+		return scene;
+	}
+
+	return nullptr;
 }
 
 // on "init" you need to initialize your instance
@@ -50,43 +61,30 @@ bool ModelViewer::init()
     return true;
 }
 
-void ModelViewer::loadModel( const std::string &filePath )
+void ModelViewer::loadModel(AnimFileIndexList& animFileList)
 {
-    Sprite3D *sprite = Sprite3D::create(filePath);
-    if (sprite)
-    {
-        auto animation = Animation3D::create(filePath);
-        if (animation)
-        {
-            auto animate = Animate3D::create(animation);
-            sprite->runAction(RepeatForever::create(animate));
-        }
+	FileUtils::getInstance()->addSearchPath("data");
 
-        AABB aabb = sprite->getAABB();
-        Vec3 corners[8];
-        aabb.getCorners(corners);
-        //temporary method, replace it
-        if (abs(corners[3].x) == 99999.0f && abs(corners[3].y) == 99999.0f && abs(corners[3].z) == 99999.0f)
-        {
-            _orginCenter = Vec3(0.0f, 0.0f, 0.0f);
-            _orginDistance = 100.0f;
-        }
-        else
-        {
-            float radius = (corners[0] - corners[5]).length();
-            _orginCenter = aabb.getCenter();
-            _orginDistance = radius;
-        }
-        sprite->setCameraMask((unsigned short)CameraFlag::USER1);
-        _layer->addChild(sprite);
-    }
+	for (auto spr = animFileList.begin(); spr != animFileList.end(); ++spr)
+	{
+		FileUtils::getInstance()->addSearchPath(spr->name);
+		FileUtils::getInstance()->addSearchPath("data/" + spr->name);
 
+		auto target = ViewTarget::create();
+		target->load(*spr);
+
+		m_ViewList.pushBack(target);
+	}
+
+	m_SpriteIndex = 0;
+	changeViewTarget(0);
+//	if (!m_ViewList.empty())
+//		_layer->addChild(m_ViewList.at(m_SpriteIndex)->getNode());
 }
 
 ModelViewer::ModelViewer()
     : _camera(nullptr)
     , _layer(nullptr)
-    , _orginDistance(0.0f)
     , _distance(0.0f)
     , _trackballSize(1.0f)
 {
@@ -211,6 +209,16 @@ void ModelViewer::onKeyPressedThis( EventKeyboard::KeyCode keycode, Event *event
             resetCamera();
         }
         break;
+	case EventKeyboard::KeyCode::KEY_X:
+	{
+		changeViewTarget(1);
+	}
+	break;
+	case EventKeyboard::KeyCode::KEY_Z:
+	{
+		changeViewTarget(-1);
+	}
+	break;
     default:
         break;
     }
@@ -225,7 +233,7 @@ void ModelViewer::resetCamera()
     _camera->lookAt(_orginCenter, Vec3(0.0f, 1.0f, 0.0f));
 }
 
-void ModelViewer::setCamera()
+void ModelViewer::initCamera()
 {
     Size visibleSize = Director::getInstance()->getVisibleSize();
     _camera = Camera::createPerspective(60.0f, (GLfloat)visibleSize.width/visibleSize.height, 1.0f, _orginDistance * 5.0f);
@@ -236,3 +244,34 @@ void ModelViewer::setCamera()
     _camera->setCameraMask((unsigned short)CameraFlag::USER1);
     _layer->addChild(_camera);
 }
+
+void ModelViewer::changeViewTarget(int stepLength)
+{
+	if (m_ViewList.empty())
+		return;
+
+	m_ViewList.at(m_SpriteIndex)->getNode()->removeFromParentAndCleanup(false);
+
+	stepLength %= m_ViewList.size();
+	m_SpriteIndex += stepLength;
+	if (m_SpriteIndex >= m_ViewList.size())
+	{
+		m_SpriteIndex %= m_ViewList.size();
+	}
+	else if (m_SpriteIndex < 0){
+		m_SpriteIndex += m_ViewList.size();
+	}
+
+	addChild(m_ViewList.at(m_SpriteIndex)->getNode());
+
+	updateCameraSet();
+}
+
+void ModelViewer::updateCameraSet()
+{
+	_orginDistance = m_ViewList.at(m_SpriteIndex)->getCamDistance();
+	_orginCenter.set(m_ViewList.at(m_SpriteIndex)->getCamCenter());
+
+	resetCamera();
+}
+

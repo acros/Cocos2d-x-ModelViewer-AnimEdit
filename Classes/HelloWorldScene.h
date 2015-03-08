@@ -2,6 +2,9 @@
 #define __MODELVIEWER_SCENE_H__
 
 #include "cocos2d.h"
+#include "IndexFileParser.h"
+
+class ViewTarget;
 
 class ModelViewer : public cocos2d::Layer
 {
@@ -12,8 +15,9 @@ public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();  
 
-	void loadModel(const std::string &filePath);
-    void setCamera();
+	void loadModel(AnimFileIndexList& animFileList);
+
+    void initCamera();
 
     // implement the "static create()" method manually
     CREATE_FUNC(ModelViewer);
@@ -35,20 +39,27 @@ protected:
     void updateCameraTransform();
     void resetCamera();
 
+	void changeViewTarget(int stepLength);
+
+	void updateCameraSet();
 
 private:
 
     cocos2d::Camera *_camera;
     cocos2d::Layer *_layer;
 
-    float _orginDistance;
-    cocos2d::Vec3 _orginCenter;
+	float _orginDistance;
+	cocos2d::Vec3 _orginCenter;
 
     float _distance;
     float _trackballSize;
     cocos2d::Quaternion _rotation;
     cocos2d::Vec3 _center;
     cocos2d::Vec2 _preMouseLocation;
+
+
+	int		m_SpriteIndex;
+	cocos2d::Vector<ViewTarget*>	m_ViewList;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

@@ -1,0 +1,31 @@
+{
+    "list": 
+	[
+        {
+			"name":"knight",
+            "model":"knight.c3b",
+            "anim": "knight.c3b",
+            "sec": 
+			[
+                {
+                    "idle": [0,100],
+                    "walk": [100,250]
+                }
+            ]
+        },
+
+		{
+			"name":"Piglet",
+            "model": "piglet.c3b",
+            "tex": "zhu0928.jpg",
+            "sec": 
+			[
+                {
+                    "idle": [0,100],
+                    "walk": [100,200]
+                }
+            ]
+        }
+    ]
+
+}

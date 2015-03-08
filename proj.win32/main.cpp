@@ -6,11 +6,14 @@ USING_NS_CC;
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2) return -1;
-    std::string path = argv[1];
-    for (std::string::iterator iter = path.begin(); iter != path.end(); ++iter){
-        if (*iter == '\\') *iter = '/';
-    }
+   // if (argc < 2) return -1;
+
+//    std::string path = argv[1];
+//     for (std::string::iterator iter = path.begin(); iter != path.end(); ++iter){
+//         if (*iter == '\\') *iter = '/';
+//     }
+
+	std::string path = "config.json";
     AppDelegate app(path);
     return Application::getInstance()->run();
 }
