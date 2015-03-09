@@ -29,7 +29,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLViewImpl::create("Model Viewer");
+//		Rect rec(0, 0, 480, 320);
+//		glview = GLViewImpl::createWithRect("Model Viewer",rec);
+		glview = GLViewImpl::create("Model Viewer");
         director->setOpenGLView(glview);
     }
 

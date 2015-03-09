@@ -52,6 +52,9 @@ bool ModelViewer::init()
     listenerkeyboard->onKeyPressed = CC_CALLBACK_2(ModelViewer::onKeyPressedThis, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listenerkeyboard, this);
 
+	auto listenerOfUiEvent = EventListenerCustom::create(UiCustomEventData::sUiCustomEventName, CC_CALLBACK_1(ModelViewer::onUiCustomEvent, this));
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerOfUiEvent, this);
+
     _layer = Layer::create();
     _layer->retain();
     addChild(_layer);
@@ -71,7 +74,7 @@ void ModelViewer::loadModel(AnimFileIndexList& animFileList)
 		auto target = ViewTarget::create();
 		target->load(*spr);
 
-		m_ViewList.pushBack(target);
+		addViewTarget(target);
 	}
 
 	m_SpriteIndex = 0;
@@ -245,39 +248,102 @@ void ModelViewer::initCamera()
 
 void ModelViewer::changeViewTarget(int stepLength)
 {
-	if (m_ViewList.empty())
+	if (_viewTargetList.empty())
 		return;
 
-	m_ViewList.at(m_SpriteIndex)->getNode()->removeFromParentAndCleanup(false);
+	UiHandler::getInstance()->clearAnimViewList();
 
-	stepLength %= m_ViewList.size();
+	_viewTargetList.at(m_SpriteIndex)->getNode()->removeFromParentAndCleanup(false);
+
+	stepLength %= _viewTargetList.size();
 	m_SpriteIndex += stepLength;
-	if (m_SpriteIndex >= m_ViewList.size())
+	if (m_SpriteIndex >= _viewTargetList.size())
 	{
-		m_SpriteIndex %= m_ViewList.size();
+		m_SpriteIndex %= _viewTargetList.size();
 	}
 	else if (m_SpriteIndex < 0){
-		m_SpriteIndex += m_ViewList.size();
+		m_SpriteIndex += _viewTargetList.size();
 	}
 
-	addChild(m_ViewList.at(m_SpriteIndex)->getNode());
+	addChild(_viewTargetList.at(m_SpriteIndex)->getNode());
 	updateCameraSet();
 
-	UiHandler::getInstance()->setTitle(m_ViewList.at(m_SpriteIndex)->getTitle());
-	UiHandler::getInstance()->setModelName(m_ViewList.at(m_SpriteIndex)->getModelName());
+	UiHandler::getInstance()->setTitle(_viewTargetList.at(m_SpriteIndex)->getTitle());
+	UiHandler::getInstance()->setModelName(_viewTargetList.at(m_SpriteIndex)->getModelName());
 
+	updateUiAnimList();
+}
+
+void ModelViewer::changeViewTarget(const std::string& targetName)
+{
+	for (int i = 0; i < _viewTargetList.size(); ++i){
+		if (_viewTargetList.at(i)->getTitle() == targetName){
+			_viewTargetList.at(m_SpriteIndex)->getNode()->removeFromParentAndCleanup(false);
+		
+			UiHandler::getInstance()->clearAnimViewList();
+			m_SpriteIndex = i;
+			addChild(_viewTargetList.at(m_SpriteIndex)->getNode());
+			updateCameraSet();
+			UiHandler::getInstance()->setTitle(_viewTargetList.at(m_SpriteIndex)->getTitle());
+			UiHandler::getInstance()->setModelName(_viewTargetList.at(m_SpriteIndex)->getModelName());
+
+			updateUiAnimList();
+			break;
+		}
+	}
 }
 
 void ModelViewer::updateCameraSet()
 {
-	_orginDistance = m_ViewList.at(m_SpriteIndex)->getCamDistance();
-	_orginCenter.set(m_ViewList.at(m_SpriteIndex)->getCamCenter());
+	_orginDistance = _viewTargetList.at(m_SpriteIndex)->getCamDistance();
+	_orginCenter.set(_viewTargetList.at(m_SpriteIndex)->getCamCenter());
 
 	resetCamera();
 }
 
 void ModelViewer::changeAnim(int step)
 {
-	m_ViewList.at(m_SpriteIndex)->switchAnim(step);
+	_viewTargetList.at(m_SpriteIndex)->switchAnim(step);
+}
+
+void ModelViewer::changeAnim(const std::string& animName)
+{
+	_viewTargetList.at(m_SpriteIndex)->switchAnim(animName);
+}
+
+void ModelViewer::onUiCustomEvent(cocos2d::EventCustom* event)
+{
+	auto uiInfo = static_cast<UiCustomEventData*>(event->getUserData());
+
+	switch (uiInfo->_type)
+	{
+	case UiCustomEventType::UCE_SELECT_MODEL:
+		if (uiInfo->_idx != 0)
+			changeViewTarget(uiInfo->_info);
+		
+		break;
+	case UiCustomEventType::UCE_SELECT_ANIM:
+			changeAnim(uiInfo->_info);
+		break;
+	default:
+		break;
+	}
+
+
+}
+
+void ModelViewer::addViewTarget(ViewTarget* newTarget)
+{
+	_viewTargetList.pushBack(newTarget);
+	UiHandler::getInstance()->addModelToViewList(newTarget->getTitle());
+}
+
+void ModelViewer::updateUiAnimList()
+{
+	auto animMap = _viewTargetList.at(m_SpriteIndex)->getAnimMap();
+	for (auto itr = animMap.begin(); itr != animMap.end();	++itr){
+		UiHandler::getInstance()->addAnimToViewList(itr->first);
+	}
+
 }
 

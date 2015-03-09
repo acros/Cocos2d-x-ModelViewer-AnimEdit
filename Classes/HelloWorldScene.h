@@ -28,6 +28,9 @@ CC_CONSTRUCTOR_ACCESS:
 
 protected:
 
+	void onUiCustomEvent(cocos2d::EventCustom* event);
+
+
     void onTouchsMovedThis(const std::vector<cocos2d::Touch*> &touchs, cocos2d::Event *event);
     void onMouseScrollThis(cocos2d::Event* event);
     void onMouseMovedThis(cocos2d::Event* event);
@@ -40,11 +43,15 @@ protected:
     void resetCamera();
 
 	void changeViewTarget(int step);
+	void changeViewTarget(const std::string& targetName);
 	void changeAnim(int step);
+	void changeAnim(const std::string& animName);
 
 	void updateCameraSet();
 
 private:
+	void addViewTarget(ViewTarget*	newTarget);
+	void updateUiAnimList();
 
     cocos2d::Camera *_camera;
     cocos2d::Layer *_layer;
@@ -60,7 +67,7 @@ private:
 
 
 	int		m_SpriteIndex;
-	cocos2d::Vector<ViewTarget*>	m_ViewList;
+	cocos2d::Vector<ViewTarget*>	_viewTargetList;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

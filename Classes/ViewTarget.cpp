@@ -34,8 +34,9 @@ bool ViewTarget::load(const AnimFileIndex& fileIdx)
 		if (animation)
 		{
 			auto animate = Animate3D::create(animation);
-			_AnimList.insert("_ALL_",animate);
-			UiHandler::getInstance()->setAnimName("__ALL__");
+			string	defaultAnim = "Default Animation";
+			_AnimList.insert(defaultAnim, animate);
+			UiHandler::getInstance()->setAnimName(defaultAnim);
 			_Sprite3d->runAction(RepeatForever::create(animate));
 
 			parseAnimSection(fileIdx,animation);
@@ -74,6 +75,7 @@ void ViewTarget::switchAnim(int step)
 	if (step == 0)
 		return;
 
+	assert(step == 1 || step == -1);
 	if (step > 0 )
 	{
 		_currAnim++;
@@ -93,6 +95,20 @@ void ViewTarget::switchAnim(int step)
 	_Sprite3d->runAction(RepeatForever::create(_currAnim->second));
 
 	UiHandler::getInstance()->setAnimName(_currAnim->first);
+}
+
+void ViewTarget::switchAnim(const std::string& animName)
+{
+	for (auto itr = _AnimList.begin(); itr != _AnimList.end();	++itr){
+		if (itr->first == animName)	{
+			_currAnim = itr;
+			_Sprite3d->stopAllActions();
+			_Sprite3d->runAction(RepeatForever::create(_currAnim->second));
+
+			UiHandler::getInstance()->setAnimName(_currAnim->first);
+			break;
+		}
+	}
 }
 
 void ViewTarget::parseAnimSection(const AnimFileIndex& animFile, Animation3D* anim)

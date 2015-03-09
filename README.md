@@ -2,10 +2,14 @@
 For cocos2d-x after version 3.4
 
 Zhao Zhihui:
+2015.3.8
 	Load data from config.json
 	Use keyboard to switch model and animation
-
 	Add UI layout (Need cocos studio after version v2.1),show anim and model name.
+
+2015.3.9
+	Add Model/Anim listview.
+
 
 Keyboard:
 	Z		--	Prev Model
