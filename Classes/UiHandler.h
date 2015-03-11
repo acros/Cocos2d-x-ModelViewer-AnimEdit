@@ -5,6 +5,7 @@
 #include "ui/UIText.h"
 #include "ui/UIListView.h"
 #include "ui/UIButton.h"
+#include "ui/UITextField.h"
 
 enum class UiCustomEventType{
 	UCE_SELECT_MODEL,
@@ -37,7 +38,7 @@ public:
 
 	void	setTitle(const std::string&	title);
 	void	setModelName(const std::string&	title);
-	void	setAnimName(const std::string&	title);
+	void	setAnimName(const std::string& animName, int from= 0 , int to = 0);
 
 	void	addModelToViewList(const std::string& modelName);
 	void	addAnimToViewList(const std::string& animName);
@@ -46,19 +47,36 @@ public:
 		_animListView->removeAllItems();
 	}
 
+	void update(float t)override;
+
 protected:
 	void selectedModelEvent(cocos2d::Ref *pSender, cocos2d::ui::ListView::EventType type);
 	void selectedAnimEvent(cocos2d::Ref *pSender, cocos2d::ui::ListView::EventType type);
 
+
+	void showUserMsg(const std::string&	msg);
+
+	//Left top
 	cocos2d::RefPtr<cocos2d::ui::Text>	_titleLabel;
 	cocos2d::RefPtr<cocos2d::ui::Text>	_animLabel;
 	cocos2d::RefPtr<cocos2d::ui::Text>	_modelLabel;
 
+	//Right top
 	cocos2d::RefPtr<cocos2d::ui::ListView>	_modelListView;
 	cocos2d::RefPtr<cocos2d::ui::ListView>	_animListView;
 
+	//Right bottom
+	cocos2d::RefPtr<cocos2d::ui::Button>	_SaveBtn;
+	cocos2d::RefPtr<cocos2d::ui::TextField>	_FromFrame;
+	cocos2d::RefPtr<cocos2d::ui::TextField>	_ToFrame;
+
+	//Middle bottom
+	cocos2d::RefPtr<cocos2d::ui::Text>		_MsgToUser;
+
+
+	float _MsgToUserAlpha;
 private:
-	cocos2d::RefPtr<cocos2d::ui::Button>	_defaultBtninListView;
+	cocos2d::RefPtr<cocos2d::ui::Button>	_defaultBtninListView;	//Dummy for clone
 
 	static cocos2d::RefPtr<UiHandler>	sInstance;
 };

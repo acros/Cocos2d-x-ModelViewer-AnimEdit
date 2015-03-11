@@ -1,5 +1,6 @@
 #include "UiHandler.h"
 #include "cocostudio/ActionTimeline/CSLoader.h"
+#include "ui/UIHelper.h"
 
 USING_NS_CC;
 
@@ -20,6 +21,7 @@ UiCustomEventData::UiCustomEventData(UiCustomEventType uiType)
 
 
 UiHandler::UiHandler()
+: _MsgToUserAlpha(1.f)
 {
 	assert(sInstance == nullptr);
 	sInstance = this;
@@ -40,12 +42,13 @@ bool UiHandler::init()
 {
 	Layer::init();
 
-	auto hud = CSLoader::createNode("ModelViewSelect.csb");
-	hud->setCameraMask((unsigned short)CameraFlag::DEFAULT);
+	auto hud = static_cast<Widget*>(CSLoader::createNode("ModelViewSelect.csb"));
 
-	addChild(hud);
 	if (hud != nullptr)
 	{
+		hud->setCameraMask((unsigned short)CameraFlag::DEFAULT);
+		addChild(hud);
+
 		_titleLabel = static_cast<ui::Text*>(hud->getChildByName("global_anchor_lt")->getChildByName("title"));
 		_modelLabel = static_cast<ui::Text*>(_titleLabel->getChildByName("modelName"));
 		_animLabel = static_cast<ui::Text*>(_modelLabel->getChildByName("animName"));
@@ -61,6 +64,15 @@ bool UiHandler::init()
 		_animListView->setTouchEnabled(true);
 		_animListView->setSwallowTouches(true);
 		_animListView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(UiHandler::selectedAnimEvent, this));
+
+		_FromFrame  = static_cast<ui::TextField*>(ui::Helper::seekWidgetByName(hud,"FromFrame"));
+		_ToFrame = static_cast<ui::TextField*>(ui::Helper::seekWidgetByName(hud,"ToFrame"));
+		_MsgToUser = static_cast<ui::Text*>(ui::Helper::seekWidgetByName(hud, "info"));
+
+		_SaveBtn = static_cast<ui::Button*>(ui::Helper::seekWidgetByName(hud,"saveToFile"));
+
+		showUserMsg("Shortcut Key Z/X to switch model, A/S to switch animation.\nUse MOUSE to control view. Key SPACE to reset camera.");
+		scheduleUpdate();
 	}
 
 	return true;
@@ -102,7 +114,7 @@ void UiHandler::setModelName(const std::string& modelName)
 	_modelLabel->setString(modelName);
 }
 
-void UiHandler::setAnimName(const std::string& animName)
+void UiHandler::setAnimName(const std::string& animName,int from,int to)
 {
 	_animLabel->setString(animName);
 }
@@ -137,5 +149,29 @@ void UiHandler::addAnimToViewList(const std::string& animName)
 	else
 		_animListView->insertCustomItem(newWidget, 1);
 
+}
+
+void UiHandler::update(float t)
+{
+	if (_MsgToUser->isVisible())
+	{
+		_MsgToUserAlpha -= t*0.2f;
+		_MsgToUser->setOpacity(_MsgToUserAlpha * 255);
+		if (_MsgToUserAlpha < 0.f)
+		{
+			_MsgToUser->setVisible(false);
+			_MsgToUserAlpha = 0;
+		}
+	}
+
+
+}
+
+void UiHandler::showUserMsg(const std::string& msg)
+{
+	_MsgToUser->setVisible(true);
+	_MsgToUserAlpha = 1.f;
+
+	_MsgToUser->setString(msg);
 }
 

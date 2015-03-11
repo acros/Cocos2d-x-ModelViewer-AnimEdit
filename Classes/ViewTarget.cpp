@@ -36,7 +36,7 @@ bool ViewTarget::load(const AnimFileIndex& fileIdx)
 			auto animate = Animate3D::create(animation);
 			string	defaultAnim = "Default Animation";
 			_AnimList.insert(defaultAnim, animate);
-			UiHandler::getInstance()->setAnimName(defaultAnim);
+			UiHandler::getInstance()->setAnimName(defaultAnim,0,animate->getOriginInterval() * 30.f);
 			_Sprite3d->runAction(RepeatForever::create(animate));
 
 			parseAnimSection(fileIdx,animation);
