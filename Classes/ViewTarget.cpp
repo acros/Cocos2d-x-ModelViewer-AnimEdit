@@ -10,6 +10,7 @@ bool ViewTarget::init()
 
 ViewTarget::ViewTarget():
 _orginDistance(0.0f)
+, _MaxAnimFrame(0)
 {
 
 }
@@ -19,7 +20,7 @@ ViewTarget::~ViewTarget()
 
 }
 
-bool ViewTarget::load(const AnimFileIndex& fileIdx)
+bool ViewTarget::load(AnimFileData& fileIdx)
 {
 	if (fileIdx.texFile.empty())
 		_Sprite3d = Sprite3D::create(fileIdx.modelFile);
@@ -34,9 +35,9 @@ bool ViewTarget::load(const AnimFileIndex& fileIdx)
 		if (animation)
 		{
 			auto animate = Animate3D::create(animation);
-			string	defaultAnim = "Default Animation";
-			_AnimList.insert(defaultAnim, animate);
-			UiHandler::getInstance()->setAnimName(defaultAnim,0,animate->getOriginInterval() * 30.f);
+			_AnimList.insert(IndexFileParser::s_DefaultAnim, animate);
+			_MaxAnimFrame = animation->getDuration() * IndexFileParser::sFrameRate;
+			UiHandler::getInstance()->setAnimName(IndexFileParser::s_DefaultAnim, 0, _MaxAnimFrame);
 			_Sprite3d->runAction(RepeatForever::create(animate));
 
 			parseAnimSection(fileIdx,animation);
@@ -94,7 +95,14 @@ void ViewTarget::switchAnim(int step)
 	_Sprite3d->stopAllActions();
 	_Sprite3d->runAction(RepeatForever::create(_currAnim->second));
 
-	UiHandler::getInstance()->setAnimName(_currAnim->first);
+	if (_currAnim == _AnimList.begin()){
+		UiHandler::getInstance()->setAnimName(_currAnim->first, 0,_MaxAnimFrame);
+	}
+	else{
+		auto animTarget = IndexFileParser::findAnim(_name,_currAnim->first);
+		if (animTarget != nullptr)
+			UiHandler::getInstance()->setAnimName(_currAnim->first, animTarget->start, animTarget->end);
+	}
 }
 
 void ViewTarget::switchAnim(const std::string& animName)
@@ -105,13 +113,20 @@ void ViewTarget::switchAnim(const std::string& animName)
 			_Sprite3d->stopAllActions();
 			_Sprite3d->runAction(RepeatForever::create(_currAnim->second));
 
-			UiHandler::getInstance()->setAnimName(_currAnim->first);
+			if (itr == _AnimList.begin())
+				UiHandler::getInstance()->setAnimName(_currAnim->first,0,_MaxAnimFrame);
+			else{
+				auto animTarget = IndexFileParser::findAnim(_name, animName);
+				if (animTarget != nullptr)
+					UiHandler::getInstance()->setAnimName(animName, animTarget->start, animTarget->end);
+			}
+
 			break;
 		}
 	}
 }
 
-void ViewTarget::parseAnimSection(const AnimFileIndex& animFile, Animation3D* anim)
+void ViewTarget::parseAnimSection(const AnimFileData& animFile, Animation3D* anim)
 {
 	for (auto it = animFile.animList.begin(); it != animFile.animList.end(); ++it){
 		auto animate = Animate3D::createWithFrames(anim, it->start, it->end);
@@ -119,7 +134,6 @@ void ViewTarget::parseAnimSection(const AnimFileIndex& animFile, Animation3D* an
 	}
 
 	_currAnim = _AnimList.begin();
-
 }
 
 const std::string& ViewTarget::getCurrAnimName() const

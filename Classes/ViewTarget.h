@@ -17,7 +17,7 @@ CC_CONSTRUCTOR_ACCESS:
 public:
 	CREATE_FUNC(ViewTarget);
 
-	bool	load(const AnimFileIndex&	animFile);
+	bool	load(AnimFileData&	animFile);
 
 	cocos2d::Node*	getNode()const;
 
@@ -33,8 +33,10 @@ public:
 
 	const AnimMap&	getAnimMap()const	{ return _AnimList; }
 
+	int	getMaxFrame()const { return _MaxAnimFrame; }
+
 protected:
-	void	parseAnimSection(const AnimFileIndex&	animFile, cocos2d::Animation3D* anim);
+	void	parseAnimSection(const AnimFileData&	animFile, cocos2d::Animation3D* anim);
 
 	float			_orginDistance;
 	cocos2d::Vec3	_orginCenter;
@@ -46,6 +48,8 @@ protected:
 
 	AnimMap	_AnimList;
 	AnimMapIter _currAnim;
+
+	int		_MaxAnimFrame;
 };
 
 #endif

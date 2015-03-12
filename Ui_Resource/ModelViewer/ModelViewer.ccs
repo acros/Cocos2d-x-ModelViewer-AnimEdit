@@ -4,6 +4,7 @@
     <Group ctype="ResourceGroup">
       <RootFolder Name=".">
         <Project Name="ModelViewSelect.csd" />
+        <Image Name="Button_Normal.png" />
       </RootFolder>
     </Group>
   </SolutionFolder>

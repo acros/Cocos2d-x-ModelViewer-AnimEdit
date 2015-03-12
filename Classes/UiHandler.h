@@ -38,7 +38,7 @@ public:
 
 	void	setTitle(const std::string&	title);
 	void	setModelName(const std::string&	title);
-	void	setAnimName(const std::string& animName, int from= 0 , int to = 0);
+	void	setAnimName(const std::string& animName, int from, int to);
 
 	void	addModelToViewList(const std::string& modelName);
 	void	addAnimToViewList(const std::string& animName);
@@ -53,9 +53,9 @@ protected:
 	void selectedModelEvent(cocos2d::Ref *pSender, cocos2d::ui::ListView::EventType type);
 	void selectedAnimEvent(cocos2d::Ref *pSender, cocos2d::ui::ListView::EventType type);
 
-
 	void showUserMsg(const std::string&	msg);
 
+private:
 	//Left top
 	cocos2d::RefPtr<cocos2d::ui::Text>	_titleLabel;
 	cocos2d::RefPtr<cocos2d::ui::Text>	_animLabel;
@@ -73,9 +73,8 @@ protected:
 	//Middle bottom
 	cocos2d::RefPtr<cocos2d::ui::Text>		_MsgToUser;
 
-
 	float _MsgToUserAlpha;
-private:
+
 	cocos2d::RefPtr<cocos2d::ui::Button>	_defaultBtninListView;	//Dummy for clone
 
 	static cocos2d::RefPtr<UiHandler>	sInstance;

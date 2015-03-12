@@ -70,6 +70,9 @@ bool UiHandler::init()
 		_MsgToUser = static_cast<ui::Text*>(ui::Helper::seekWidgetByName(hud, "info"));
 
 		_SaveBtn = static_cast<ui::Button*>(ui::Helper::seekWidgetByName(hud,"saveToFile"));
+		
+		//TODO
+		_SaveBtn->setEnabled(false);
 
 		showUserMsg("Shortcut Key Z/X to switch model, A/S to switch animation.\nUse MOUSE to control view. Key SPACE to reset camera.");
 		scheduleUpdate();
@@ -117,6 +120,13 @@ void UiHandler::setModelName(const std::string& modelName)
 void UiHandler::setAnimName(const std::string& animName,int from,int to)
 {
 	_animLabel->setString(animName);
+
+	char text[25];
+	_itoa(from, text, 10);
+	_FromFrame->setString(text);
+
+	_itoa(to, text, 10);
+	_ToFrame->setString(text);
 }
 
 void UiHandler::addModelToViewList(const std::string& modelName)

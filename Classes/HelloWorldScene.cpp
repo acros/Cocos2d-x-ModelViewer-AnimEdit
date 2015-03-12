@@ -6,9 +6,9 @@ USING_NS_CC;
 
 Scene* ModelViewer::createScene(const std::string& filePath)
 {
-	auto animList = IndexFileParser::parseIndexFile(filePath);
+	auto animFileData = IndexFileParser::parseIndexFile(filePath);
 
-	if (animList != nullptr)
+	if (animFileData != nullptr)
 	{
 		auto scene = Scene::create();
 
@@ -19,10 +19,9 @@ Scene* ModelViewer::createScene(const std::string& filePath)
 		//Add model layer
 		auto layer = ModelViewer::create();
  		layer->initCamera();
-		layer->loadModel(*animList);
+		layer->loadModel(*animFileData);
 		scene->addChild(layer);
 
-		delete animList;
 		return scene;
 	}
 
@@ -62,7 +61,7 @@ bool ModelViewer::init()
     return true;
 }
 
-void ModelViewer::loadModel(AnimFileIndexList& animFileList)
+void ModelViewer::loadModel(AnimFileDataList& animFileList)
 {
 	FileUtils::getInstance()->addSearchPath("data");
 
@@ -271,6 +270,7 @@ void ModelViewer::changeViewTarget(int stepLength)
 	UiHandler::getInstance()->setTitle(_viewTargetList.at(m_SpriteIndex)->getTitle());
 	UiHandler::getInstance()->setModelName(_viewTargetList.at(m_SpriteIndex)->getModelName());
 
+
 	updateUiAnimList();
 }
 
@@ -345,5 +345,7 @@ void ModelViewer::updateUiAnimList()
 		UiHandler::getInstance()->addAnimToViewList(itr->first);
 	}
 
+	changeAnim(IndexFileParser::s_DefaultAnim);
+	UiHandler::getInstance()->setAnimName(IndexFileParser::s_DefaultAnim, 0, _viewTargetList.at(m_SpriteIndex)->getMaxFrame());
 }
 

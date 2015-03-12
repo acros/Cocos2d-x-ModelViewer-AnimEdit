@@ -12,7 +12,7 @@
 
 using std::string;
 
-struct AnimFileIndex{
+struct AnimFileData{
 	string name;
 	string modelFile;
 	string texFile;
@@ -26,7 +26,7 @@ struct AnimFileIndex{
 	};
 	std::vector<AnimFrames>	animList;
 };
-typedef std::vector<AnimFileIndex>	AnimFileIndexList;
+typedef std::vector<AnimFileData>	AnimFileDataList;
 
 
 class IndexFileParser{
@@ -36,7 +36,15 @@ protected:
 
 public:
 
-	static AnimFileIndexList*	parseIndexFile(const std::string&	filePath);
+	static AnimFileDataList*	parseIndexFile(const std::string&	filePath);
+
+	static AnimFileData::AnimFrames*	findAnim(const std::string&	modelName, const std::string& animName);
+
+
+	static AnimFileDataList		s_AnimFileData;
+	static const float			sFrameRate;
+	static const std::string	s_DefaultAnim;
+
 };
 
 #endif
