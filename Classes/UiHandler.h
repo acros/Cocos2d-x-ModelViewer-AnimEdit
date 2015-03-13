@@ -26,6 +26,12 @@ public:
 
 
 class UiHandler : public cocos2d::Layer{
+	enum class	AddingState{ 
+		AS_NONE, 
+		AS_ADD_MODEL, 
+		AS_ADD_ANIM 
+	};
+
 CC_CONSTRUCTOR_ACCESS:
 	UiHandler();
 	~UiHandler();
@@ -36,47 +42,63 @@ public:
 
 	static UiHandler*	getInstance();
 
-	void	setTitle(const std::string&	title);
-	void	setModelName(const std::string&	title);
+	void	setTitle(const std::string&	title)		{	_titleLabel->setString(title);	}
+	void	setModelName(const std::string&	title)	{	_modelLabel->setString(title);	}
+	
 	void	setAnimName(const std::string& animName, int from, int to);
 
 	void	addModelToViewList(const std::string& modelName);
 	void	addAnimToViewList(const std::string& animName);
 
-	void	clearAnimViewList(){
-		_animListView->removeAllItems();
-	}
+	void	clearAnimViewList()						{	_animListView->removeAllItems();	}
 
 	void update(float t)override;
+
+	void showUserMsg(const std::string&	msg, cocos2d::Color3B c = cocos2d::Color3B::WHITE);
 
 protected:
 	void selectedModelEvent(cocos2d::Ref *pSender, cocos2d::ui::ListView::EventType type);
 	void selectedAnimEvent(cocos2d::Ref *pSender, cocos2d::ui::ListView::EventType type);
 
-	void showUserMsg(const std::string&	msg);
+	void modifyAnim(cocos2d::Ref* pSender);
+	void AddNewItem(cocos2d::Ref* pSender);
+	void showAdding(cocos2d::Ref* pSender, AddingState state);
+	void serializeToJson(cocos2d::Ref* pSender);
+
 
 private:
-	//Left top
+
+	//Info show on screen's left-top
 	cocos2d::RefPtr<cocos2d::ui::Text>	_titleLabel;
 	cocos2d::RefPtr<cocos2d::ui::Text>	_animLabel;
 	cocos2d::RefPtr<cocos2d::ui::Text>	_modelLabel;
 
-	//Right top
+	//Model/Anim view and add
+	AddingState		_addState;
+
 	cocos2d::RefPtr<cocos2d::ui::ListView>	_modelListView;
 	cocos2d::RefPtr<cocos2d::ui::ListView>	_animListView;
+	cocos2d::RefPtr<cocos2d::ui::Button>	_addModelBtn;
+	cocos2d::RefPtr<cocos2d::ui::Button>	_addAnimBtn;
 
-	//Right bottom
-	cocos2d::RefPtr<cocos2d::ui::Button>	_SaveBtn;
+	//Add Model/Anim dialog
+	cocos2d::RefPtr<cocos2d::ui::Widget>	_addDialogImage;	//Image view
+	cocos2d::RefPtr<cocos2d::ui::TextField>	_addFileName;
+	cocos2d::RefPtr<cocos2d::ui::Button>	_addOkBtn;
+
+	//Edit animation
 	cocos2d::RefPtr<cocos2d::ui::TextField>	_FromFrame;
 	cocos2d::RefPtr<cocos2d::ui::TextField>	_ToFrame;
+	cocos2d::RefPtr<cocos2d::ui::Button>	_EnsureModifyAnimBtn;
 
-	//Middle bottom
+	//Serialize to json
+	cocos2d::RefPtr<cocos2d::ui::Button>	_SaveBtn;
+
+	//Message text
 	cocos2d::RefPtr<cocos2d::ui::Text>		_MsgToUser;
-
 	float _MsgToUserAlpha;
-
+	
 	cocos2d::RefPtr<cocos2d::ui::Button>	_defaultBtninListView;	//Dummy for clone
-
 	static cocos2d::RefPtr<UiHandler>	sInstance;
 };
 

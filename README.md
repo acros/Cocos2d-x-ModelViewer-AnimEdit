@@ -1,24 +1,19 @@
 ##	Branch of OPERATION_SUPPORT	##
 For cocos2d-x after version 3.4
 
-Zhao Zhihui:
-2015.3.8
-	Load data from config.json
-	Use keyboard to switch model and animation
-	Add UI layout (Need cocos studio after version v2.1),show anim and model name.
+[Test on win7 64bit]
 
-2015.3.9
-	Add Model/Anim listview.
+Read data from config.json , or use command line to select a file as source.
 
+ Command line: 	
+	cd [path of ModelViewer]
+	./ModelViewer JSON_DATA_PATH
 
 Keyboard:
-	Z		--	Prev Model
-	X		--	Next Model	
-	A		--	Prev Animation
-	S		--	Next Animation
+	Use arrow key to switch Model/Animation.
 
 
-
+---------------------------------------------
 ## ModelViewer version 0.1 ##
 It is for cocos2d-x after version v3.3
 

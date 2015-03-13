@@ -1,7 +1,7 @@
 #include "UiHandler.h"
 #include "cocostudio/ActionTimeline/CSLoader.h"
 #include "ui/UIHelper.h"
-
+#include "IndexFileParser.h"
 USING_NS_CC;
 
 using namespace ui;
@@ -22,6 +22,7 @@ UiCustomEventData::UiCustomEventData(UiCustomEventType uiType)
 
 UiHandler::UiHandler()
 : _MsgToUserAlpha(1.f)
+, _addState(AddingState::AS_NONE)
 {
 	assert(sInstance == nullptr);
 	sInstance = this;
@@ -53,28 +54,44 @@ bool UiHandler::init()
 		_modelLabel = static_cast<ui::Text*>(_titleLabel->getChildByName("modelName"));
 		_animLabel = static_cast<ui::Text*>(_modelLabel->getChildByName("animName"));
 
+		//////////////////////////////////////////////////////////////////////////
+		_addModelBtn = static_cast<ui::Button*>(ui::Helper::seekWidgetByName(hud, "AddModelBtn"));
+		_addModelBtn->addClickEventListener(CC_CALLBACK_1(UiHandler::showAdding, this,AddingState::AS_ADD_MODEL));
 		_modelListView = static_cast<ui::ListView*>(hud->getChildByName("global_anchor_rt")->getChildByName("modelListView"));
 		_modelListView->setClippingEnabled(true);
 		_modelListView->setTouchEnabled(true);
 		_modelListView->setSwallowTouches(true);
 		_modelListView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(UiHandler::selectedModelEvent, this));
 
+		_addAnimBtn = static_cast<ui::Button*>(ui::Helper::seekWidgetByName(hud, "AddAnimBtn"));
+		_addAnimBtn->addClickEventListener(CC_CALLBACK_1(UiHandler::showAdding, this,AddingState::AS_ADD_ANIM));
 		_animListView = static_cast<ui::ListView*>(hud->getChildByName("global_anchor_rt")->getChildByName("animListView"));
 		_animListView->setClippingEnabled(true);
 		_animListView->setTouchEnabled(true);
 		_animListView->setSwallowTouches(true);
 		_animListView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(UiHandler::selectedAnimEvent, this));
+		//////////////////////////////////////////////////////////////////////////
+
+		_addDialogImage = ui::Helper::seekWidgetByName(hud, "addDialog");		
+		_addDialogImage->setVisible(false);
+		_addFileName = static_cast<ui::TextField*>(ui::Helper::seekWidgetByName(hud, "addNameText"));
+		_addOkBtn = static_cast<ui::Button*>(ui::Helper::seekWidgetByName(hud, "addGO"));
+		_addOkBtn->addClickEventListener(CC_CALLBACK_1(UiHandler::AddNewItem, this));
+
+		//////////////////////////////////////////////////////////////////////////
 
 		_FromFrame  = static_cast<ui::TextField*>(ui::Helper::seekWidgetByName(hud,"FromFrame"));
 		_ToFrame = static_cast<ui::TextField*>(ui::Helper::seekWidgetByName(hud,"ToFrame"));
+		
+		_EnsureModifyAnimBtn = static_cast<ui::Button*>(ui::Helper::seekWidgetByName(hud, "changeAnim"));
+		_EnsureModifyAnimBtn->addClickEventListener(CC_CALLBACK_1(UiHandler::modifyAnim, this));
+
 		_MsgToUser = static_cast<ui::Text*>(ui::Helper::seekWidgetByName(hud, "info"));
 
 		_SaveBtn = static_cast<ui::Button*>(ui::Helper::seekWidgetByName(hud,"saveToFile"));
-		
-		//TODO
-		_SaveBtn->setEnabled(false);
+		_SaveBtn->addClickEventListener(CC_CALLBACK_1(UiHandler::serializeToJson, this));
 
-		showUserMsg("Shortcut Key Z/X to switch model, A/S to switch animation.\nUse MOUSE to control view. Key SPACE to reset camera.");
+		showUserMsg("Arrow key to switch Model/Animation.\nUse MOUSE to control view. Key SPACE to reset camera.");
 		scheduleUpdate();
 	}
 
@@ -105,16 +122,6 @@ void UiHandler::selectedAnimEvent(cocos2d::Ref *pSender, cocos2d::ui::ListView::
 		d._info = (static_cast<Button*>(listView->getItem(d._idx)))->getTitleText();
 		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(UiCustomEventData::sUiCustomEventName, &d);
 	}
-}
-
-void UiHandler::setTitle(const std::string& title)
-{
-	_titleLabel->setString(title);
-}
-
-void UiHandler::setModelName(const std::string& modelName)
-{
-	_modelLabel->setString(modelName);
 }
 
 void UiHandler::setAnimName(const std::string& animName,int from,int to)
@@ -173,15 +180,99 @@ void UiHandler::update(float t)
 			_MsgToUserAlpha = 0;
 		}
 	}
-
-
 }
 
-void UiHandler::showUserMsg(const std::string& msg)
+void UiHandler::showUserMsg(const std::string& msg,Color3B	c)
 {
 	_MsgToUser->setVisible(true);
 	_MsgToUserAlpha = 1.f;
 
 	_MsgToUser->setString(msg);
+	_MsgToUser->setColor(c);
 }
 
+void UiHandler::modifyAnim(cocos2d::Ref* pSender)
+{
+	if (_animLabel->getString() == IndexFileParser::s_DefaultAnim)	{
+		showUserMsg("Can't modify the default animation", Color3B::RED);
+	}
+	else{
+		showUserMsg("Animation [" + _animLabel->getString() + "] modified.", Color3B::GREEN);
+
+		//TODO:
+		//change the anim
+		assert(false);
+	}
+}
+
+void UiHandler::AddNewItem(cocos2d::Ref* pSender)
+{
+	bool canAdd = true;
+
+	_addDialogImage->setVisible(false);
+
+	if (!_addFileName->getString().empty()){
+		//Check if the name exist
+		if (_addState == AddingState::AS_ADD_MODEL)
+		{
+			for (auto& items : IndexFileParser::s_AnimFileData){
+				string newName = _addFileName->getString();
+				string oldName(items.name);
+				std::transform(newName.begin(), newName.end(), newName.begin(), tolower);
+				std::transform(oldName.begin(), oldName.end(), oldName.begin(), tolower);
+
+				if (oldName == newName){
+					canAdd = false;
+					showUserMsg("Model name conflict!", Color3B::RED);
+					break;
+				}
+
+			}
+		}else if (_addState == AddingState::AS_ADD_ANIM){
+			for (auto& items : IndexFileParser::s_AnimFileData){
+				if (items.name == _titleLabel->getString())	{
+					for (auto& anim : items.animList){
+						string newName = _addFileName->getString();
+						string oldName(anim.name);
+						std::transform(newName.begin(), newName.end(), newName.begin(), tolower);
+						std::transform(oldName.begin(), oldName.end(), oldName.begin(), tolower);
+						if (oldName == newName){
+							canAdd = false;
+							showUserMsg("Animation name conflict!", Color3B::RED);
+							break;
+						}
+					}
+					if (canAdd == false)
+						break;
+				}
+			}
+		}
+	}
+
+	if (canAdd)
+	{
+		showUserMsg("Add this to list!", Color3B::GREEN);
+		//TODO:Find if exist
+		assert(false);
+	}
+
+	_addFileName->setString("");
+	_addState = AddingState::AS_NONE;
+}
+
+void UiHandler::showAdding(cocos2d::Ref* pSender, AddingState state)
+{
+	if (_addState != AddingState::AS_NONE)
+		return;
+
+	_addState = state;
+	_addDialogImage->setVisible(true);
+}
+
+void UiHandler::serializeToJson(cocos2d::Ref* pSender)
+{
+	showUserMsg("Function not finished yet.", Color3B::YELLOW);
+
+	//TODO:
+	assert(false);
+}

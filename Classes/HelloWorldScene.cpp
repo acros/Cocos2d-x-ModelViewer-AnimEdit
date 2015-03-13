@@ -207,16 +207,16 @@ void ModelViewer::onKeyPressedThis( EventKeyboard::KeyCode keycode, Event *event
     case EventKeyboard::KeyCode::KEY_SPACE:
             resetCamera();
         break;
-	case EventKeyboard::KeyCode::KEY_X:
+	case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
 			changeViewTarget(1);
 		break;
-	case EventKeyboard::KeyCode::KEY_Z:
+	case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
 			changeViewTarget(-1);
 		break;
-	case EventKeyboard::KeyCode::KEY_A:
+	case EventKeyboard::KeyCode::KEY_UP_ARROW:
 			changeAnim(-1);
 		break;
-	case EventKeyboard::KeyCode::KEY_S:
+	case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
 			changeAnim(1);
 		break;
     default:

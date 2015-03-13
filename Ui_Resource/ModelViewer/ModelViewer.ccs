@@ -5,6 +5,7 @@
       <RootFolder Name=".">
         <Project Name="ModelViewSelect.csd" />
         <Image Name="Button_Normal.png" />
+        <Image Name="arrow.png" />
       </RootFolder>
     </Group>
   </SolutionFolder>
