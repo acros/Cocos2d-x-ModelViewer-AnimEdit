@@ -34,6 +34,7 @@ public:
 	const AnimMap&	getAnimMap()const	{ return _AnimList; }
 
 	int	getMaxFrame()const { return _MaxAnimFrame; }
+	void recreateCurrentAnim(int from, int to);
 
 protected:
 	void	parseAnimSection(const AnimFileData&	animFile, cocos2d::Animation3D* anim);

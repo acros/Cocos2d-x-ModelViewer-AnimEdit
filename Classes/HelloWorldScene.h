@@ -53,6 +53,7 @@ private:
 	void addViewTarget(ViewTarget*	newTarget);
 	void updateUiAnimList();
 
+
     cocos2d::Camera *_camera;
     cocos2d::Layer *_layer;
 

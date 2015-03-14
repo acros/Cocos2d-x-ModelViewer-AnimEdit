@@ -95,4 +95,15 @@ AnimFileData::AnimFrames* IndexFileParser::findAnim(const std::string& modelName
 	return nullptr;
 }
 
+AnimFileData* IndexFileParser::findViewDate(const std::string& modelName)
+{
+	for (auto itr = s_AnimFileData.begin(); itr != s_AnimFileData.end(); ++itr)
+	{
+		if (itr->name == modelName)
+			return &(*itr);
+	}
+
+	return nullptr;
+}
+
 

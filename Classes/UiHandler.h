@@ -10,6 +10,14 @@
 enum class UiCustomEventType{
 	UCE_SELECT_MODEL,
 	UCE_SELECT_ANIM,
+	
+	UCE_MODIFY_CURRANT_ANIM,
+	
+	UCE_DELETE_ANIM,
+	UCE_DELETE_MODEL,
+
+	UCE_ADD_MODEL,
+	UCE_ADD_ANIM,
 
 };
 
@@ -20,7 +28,8 @@ public:
 	UiCustomEventData(UiCustomEventType	uiType);
 
 	UiCustomEventType		_type;
-	int						_idx;
+	int						_int1;
+	int						_int2;
 	std::string				_info;
 };
 

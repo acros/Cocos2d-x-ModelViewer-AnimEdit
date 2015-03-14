@@ -13,7 +13,8 @@ std::string UiCustomEventData::sUiCustomEventName = "UiCustomEvent";
 
 
 UiCustomEventData::UiCustomEventData(UiCustomEventType uiType)
-	: _idx(0)
+	: _int1(0)
+	, _int2(0)
 	, _type(uiType)
 {
 
@@ -104,8 +105,8 @@ void UiHandler::selectedModelEvent(cocos2d::Ref *pSender, ListView::EventType ty
 
 		ui::ListView* listView = static_cast<ui::ListView*>(pSender);
 		UiCustomEventData	d(UiCustomEventType::UCE_SELECT_MODEL);
-		d._idx = listView->getCurSelectedIndex();
-		d._info = (static_cast<Button*>(listView->getItem(d._idx)))->getTitleText();
+		d._int1 = listView->getCurSelectedIndex();
+		d._info = (static_cast<Button*>(listView->getItem(d._int1)))->getTitleText();
 		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(UiCustomEventData::sUiCustomEventName,&d);
 		// cocos2d::ui::LISTVIEW_ONSELECTEDITEM_END:
 
@@ -118,8 +119,8 @@ void UiHandler::selectedAnimEvent(cocos2d::Ref *pSender, cocos2d::ui::ListView::
 		ui::ListView* listView = static_cast<ui::ListView*>(pSender);
 
 		UiCustomEventData	d(UiCustomEventType::UCE_SELECT_ANIM);
-		d._idx = listView->getCurSelectedIndex();
-		d._info = (static_cast<Button*>(listView->getItem(d._idx)))->getTitleText();
+		d._int1 = listView->getCurSelectedIndex();
+		d._info = (static_cast<Button*>(listView->getItem(d._int1)))->getTitleText();
 		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(UiCustomEventData::sUiCustomEventName, &d);
 	}
 }
@@ -193,15 +194,29 @@ void UiHandler::showUserMsg(const std::string& msg,Color3B	c)
 
 void UiHandler::modifyAnim(cocos2d::Ref* pSender)
 {
-	if (_animLabel->getString() == IndexFileParser::s_DefaultAnim)	{
+	bool bCanModify = true;
+	if (_FromFrame->getString().empty() || _ToFrame->getString().empty() ){
+		showUserMsg("Input error in frame edit.", Color3B::RED);
+		bCanModify = false;
+	}
+
+	if (_animLabel->getString() == IndexFileParser::s_DefaultAnim){
+		bCanModify = false;
 		showUserMsg("Can't modify the default animation", Color3B::RED);
 	}
-	else{
+
+	int newFromFrame, newToFrame;
+	newFromFrame = atoi(_FromFrame->getString().c_str());
+	newToFrame = atoi(_ToFrame->getString().c_str());
+
+	if (bCanModify)	{
 		showUserMsg("Animation [" + _animLabel->getString() + "] modified.", Color3B::GREEN);
 
-		//TODO:
-		//change the anim
-		assert(false);
+		UiCustomEventData d(UiCustomEventType::UCE_MODIFY_CURRANT_ANIM);
+		d._int1 = newFromFrame;
+		d._int2 = newToFrame;
+		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(UiCustomEventData::sUiCustomEventName, &d);
+
 	}
 }
 

@@ -39,7 +39,7 @@ public:
 	static AnimFileDataList*	parseIndexFile(const std::string&	filePath);
 
 	static AnimFileData::AnimFrames*	findAnim(const std::string&	modelName, const std::string& animName);
-
+	static AnimFileData*	findViewDate(const std::string& modelName);
 
 	static AnimFileDataList		s_AnimFileData;
 	static const float			sFrameRate;

@@ -318,12 +318,14 @@ void ModelViewer::onUiCustomEvent(cocos2d::EventCustom* event)
 	switch (uiInfo->_type)
 	{
 	case UiCustomEventType::UCE_SELECT_MODEL:
-		if (uiInfo->_idx != 0)
+		if (uiInfo->_int1 != 0)
 			changeViewTarget(uiInfo->_info);
-		
 		break;
 	case UiCustomEventType::UCE_SELECT_ANIM:
 			changeAnim(uiInfo->_info);
+		break;
+	case UiCustomEventType::UCE_MODIFY_CURRANT_ANIM:
+		_viewTargetList.at(m_SpriteIndex)->recreateCurrentAnim(uiInfo->_int1, uiInfo->_int2);
 		break;
 	default:
 		break;
@@ -348,4 +350,3 @@ void ModelViewer::updateUiAnimList()
 	changeAnim(IndexFileParser::s_DefaultAnim);
 	UiHandler::getInstance()->setAnimName(IndexFileParser::s_DefaultAnim, 0, _viewTargetList.at(m_SpriteIndex)->getMaxFrame());
 }
-

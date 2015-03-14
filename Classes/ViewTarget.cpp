@@ -113,7 +113,7 @@ void ViewTarget::switchAnim(const std::string& animName)
 			_Sprite3d->stopAllActions();
 			_Sprite3d->runAction(RepeatForever::create(_currAnim->second));
 
-			if (itr == _AnimList.begin())
+			if (itr->first == IndexFileParser::s_DefaultAnim)
 				UiHandler::getInstance()->setAnimName(_currAnim->first,0,_MaxAnimFrame);
 			else{
 				auto animTarget = IndexFileParser::findAnim(_name, animName);
@@ -149,4 +149,26 @@ const std::string& ViewTarget::getTitle() const
 const std::string& ViewTarget::getModelName() const
 {
 	return _modelName;
+}
+
+void ViewTarget::recreateCurrentAnim(int from, int to)
+{
+	auto viewData = IndexFileParser::findViewDate(_name);
+	std::string animFilePath = viewData->animFile;
+	if (animFilePath.empty())	{
+		animFilePath = viewData->modelFile;
+	}
+
+	auto animation = Animation3D::create(animFilePath);
+	auto animate = Animate3D::createWithFrames(animation,from,to);
+
+	_Sprite3d->stopAllActions();
+	_Sprite3d->runAction(RepeatForever::create(animate));
+
+	auto animData = IndexFileParser::findAnim(_name, _currAnim->first);
+	animData->start = from;
+	animData->end = to;
+	_AnimList.erase(_currAnim);
+	_AnimList.insert(animData->name, animate);
+	_currAnim = _AnimList.find(animData->name);
 }
