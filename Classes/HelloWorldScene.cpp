@@ -61,7 +61,7 @@ bool ModelViewer::init()
     return true;
 }
 
-void ModelViewer::loadModel(AnimFileDataList& animFileList)
+void ModelViewer::loadModel(ResourceDataList& animFileList)
 {
 	FileUtils::getInstance()->addSearchPath("data");
 
@@ -76,10 +76,8 @@ void ModelViewer::loadModel(AnimFileDataList& animFileList)
 		addViewTarget(target);
 	}
 
-	m_SpriteIndex = 0;
+	_currViewTargetIdx = 0;
 	changeViewTarget(0);
-//	if (!m_ViewList.empty())
-//		_layer->addChild(m_ViewList.at(m_SpriteIndex)->getNode());
 }
 
 ModelViewer::ModelViewer()
@@ -247,45 +245,42 @@ void ModelViewer::initCamera()
 
 void ModelViewer::changeViewTarget(int stepLength)
 {
-	if (_viewTargetList.empty())
+	if (_viewTargetList.size() <= 1)
 		return;
 
 	UiHandler::getInstance()->clearAnimViewList();
 
-	_viewTargetList.at(m_SpriteIndex)->getNode()->removeFromParentAndCleanup(false);
+	_viewTargetList.at(_currViewTargetIdx)->getNode()->removeFromParentAndCleanup(false);
 
 	stepLength %= _viewTargetList.size();
-	m_SpriteIndex += stepLength;
-	if (m_SpriteIndex >= _viewTargetList.size())
+	_currViewTargetIdx += stepLength;
+	if (_currViewTargetIdx >= _viewTargetList.size())
 	{
-		m_SpriteIndex %= _viewTargetList.size();
+		_currViewTargetIdx %= _viewTargetList.size();
 	}
-	else if (m_SpriteIndex < 0){
-		m_SpriteIndex += _viewTargetList.size();
+	else if (_currViewTargetIdx < 0){
+		_currViewTargetIdx += _viewTargetList.size();
 	}
 
-	addChild(_viewTargetList.at(m_SpriteIndex)->getNode());
+	addChild(_viewTargetList.at(_currViewTargetIdx)->getNode());
 	updateCameraSet();
-
-	UiHandler::getInstance()->setTitle(_viewTargetList.at(m_SpriteIndex)->getTitle());
-	UiHandler::getInstance()->setModelName(_viewTargetList.at(m_SpriteIndex)->getModelName());
-
 
 	updateUiAnimList();
 }
 
 void ModelViewer::changeViewTarget(const std::string& targetName)
 {
+	if (_viewTargetList.size() <= 1)
+		return;
+
 	for (int i = 0; i < _viewTargetList.size(); ++i){
 		if (_viewTargetList.at(i)->getTitle() == targetName){
-			_viewTargetList.at(m_SpriteIndex)->getNode()->removeFromParentAndCleanup(false);
+			_viewTargetList.at(_currViewTargetIdx)->getNode()->removeFromParentAndCleanup(false);
 		
 			UiHandler::getInstance()->clearAnimViewList();
-			m_SpriteIndex = i;
-			addChild(_viewTargetList.at(m_SpriteIndex)->getNode());
+			_currViewTargetIdx = i;
+			addChild(_viewTargetList.at(_currViewTargetIdx)->getNode());
 			updateCameraSet();
-			UiHandler::getInstance()->setTitle(_viewTargetList.at(m_SpriteIndex)->getTitle());
-			UiHandler::getInstance()->setModelName(_viewTargetList.at(m_SpriteIndex)->getModelName());
 
 			updateUiAnimList();
 			break;
@@ -295,20 +290,20 @@ void ModelViewer::changeViewTarget(const std::string& targetName)
 
 void ModelViewer::updateCameraSet()
 {
-	_orginDistance = _viewTargetList.at(m_SpriteIndex)->getCamDistance();
-	_orginCenter.set(_viewTargetList.at(m_SpriteIndex)->getCamCenter());
+	_orginDistance = _viewTargetList.at(_currViewTargetIdx)->getCamDistance();
+	_orginCenter.set(_viewTargetList.at(_currViewTargetIdx)->getCamCenter());
 
 	resetCamera();
 }
 
 void ModelViewer::changeAnim(int step)
 {
-	_viewTargetList.at(m_SpriteIndex)->switchAnim(step);
+	_viewTargetList.at(_currViewTargetIdx)->switchAnim(step);
 }
 
 void ModelViewer::changeAnim(const std::string& animName)
 {
-	_viewTargetList.at(m_SpriteIndex)->switchAnim(animName);
+	_viewTargetList.at(_currViewTargetIdx)->switchAnim(animName);
 }
 
 void ModelViewer::onUiCustomEvent(cocos2d::EventCustom* event)
@@ -325,12 +320,56 @@ void ModelViewer::onUiCustomEvent(cocos2d::EventCustom* event)
 			changeAnim(uiInfo->_info);
 		break;
 	case UiCustomEventType::UCE_MODIFY_CURRANT_ANIM:
-		_viewTargetList.at(m_SpriteIndex)->recreateCurrentAnim(uiInfo->_int1, uiInfo->_int2);
+			_viewTargetList.at(_currViewTargetIdx)->recreateCurrentAnim(uiInfo->_int1, uiInfo->_int2);
+		break;
+	case  UiCustomEventType::UCE_ADD_ANIM:
+			_viewTargetList.at(_currViewTargetIdx)->addNewAnimSection(uiInfo->_info);
+		break;
+	case UiCustomEventType::UCE_ADD_MODEL:
+	{
+		auto newModelData = IndexFileParser::loadNewModel(uiInfo->_info,uiInfo->_info2);
+		if (newModelData != nullptr){
+			ViewTarget*	newTarget = ViewTarget::create();
+			newTarget->load(*newModelData);
+			addViewTarget(newTarget);
+		}else
+			UiHandler::getInstance()->showUserMsg("File not found, please ensure the files are in data folder!", Color3B::RED);
+	}
+		break;
+	case UiCustomEventType::UCE_DELETE_ANIM:
+	{
+		_viewTargetList.at(_currViewTargetIdx)->removeCurrentAnim();
+		UiHandler::getInstance()->showUserMsg("Animation deleted.", Color3B::GREEN);
+	}
+		break;
+
+	case UiCustomEventType::UCE_DELETE_MODEL:
+	{
+		if (_viewTargetList.size() <= 1 ){
+			UiHandler::getInstance()->showUserMsg("The only model left here, please don't kill me. >_<");
+		}
+		else{
+			for (auto itr = _viewTargetList.begin(); itr != _viewTargetList.end(); ++itr){
+				if ((*itr)->getTitle() == uiInfo->_info){
+					(*itr)->getNode()->removeFromParent();
+					_viewTargetList.erase(itr);
+					break;
+				}
+			}
+
+			UiHandler::getInstance()->clearAnimViewList();
+			_currViewTargetIdx = 0;
+			addChild(_viewTargetList.at(_currViewTargetIdx)->getNode());
+			updateCameraSet();
+			updateUiAnimList();
+
+			UiHandler::getInstance()->showUserMsg("Model deleted.", Color3B::GREEN);
+		}
+	}
 		break;
 	default:
 		break;
 	}
-
 
 }
 
@@ -342,11 +381,14 @@ void ModelViewer::addViewTarget(ViewTarget* newTarget)
 
 void ModelViewer::updateUiAnimList()
 {
-	auto animMap = _viewTargetList.at(m_SpriteIndex)->getAnimMap();
+	UiHandler::getInstance()->setTitle(_viewTargetList.at(_currViewTargetIdx)->getTitle());
+	UiHandler::getInstance()->setModelName(_viewTargetList.at(_currViewTargetIdx)->getModelName());
+
+	auto animMap = _viewTargetList.at(_currViewTargetIdx)->getAnimMap();
 	for (auto itr = animMap.begin(); itr != animMap.end();	++itr){
 		UiHandler::getInstance()->addAnimToViewList(itr->first);
 	}
 
 	changeAnim(IndexFileParser::s_DefaultAnim);
-	UiHandler::getInstance()->setAnimName(IndexFileParser::s_DefaultAnim, 0, _viewTargetList.at(m_SpriteIndex)->getMaxFrame());
+	UiHandler::getInstance()->setAnimName(IndexFileParser::s_DefaultAnim, 0, _viewTargetList.at(_currViewTargetIdx)->getMaxFrame());
 }

@@ -71,6 +71,12 @@ bool UiHandler::init()
 		_animListView->setTouchEnabled(true);
 		_animListView->setSwallowTouches(true);
 		_animListView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(UiHandler::selectedAnimEvent, this));
+
+		_DelModelBtn = static_cast<ui::Button*>(ui::Helper::seekWidgetByName(hud, "DelModel"));
+		_DelModelBtn->addClickEventListener(CC_CALLBACK_1(UiHandler::deleteModel, this));
+
+		_DelAnimBtn = static_cast<ui::Button*>(ui::Helper::seekWidgetByName(hud, "DelAnim"));
+		_DelAnimBtn->addClickEventListener(CC_CALLBACK_1(UiHandler::deleteAnim, this));
 		//////////////////////////////////////////////////////////////////////////
 
 		_addDialogImage = ui::Helper::seekWidgetByName(hud, "addDialog");		
@@ -79,6 +85,8 @@ bool UiHandler::init()
 		_addOkBtn = static_cast<ui::Button*>(ui::Helper::seekWidgetByName(hud, "addGO"));
 		_addOkBtn->addClickEventListener(CC_CALLBACK_1(UiHandler::AddNewItem, this));
 
+		_addTexBg = ui::Helper::seekWidgetByName(hud, "addForTexBg");
+		_addTexName = static_cast<ui::TextField*>(ui::Helper::seekWidgetByName(hud, "addForTex"));
 		//////////////////////////////////////////////////////////////////////////
 
 		_FromFrame  = static_cast<ui::TextField*>(ui::Helper::seekWidgetByName(hud,"FromFrame"));
@@ -263,12 +271,28 @@ void UiHandler::AddNewItem(cocos2d::Ref* pSender)
 			}
 		}
 	}
+	else{
+		canAdd = false;
+		showUserMsg("Need a name!", Color3B::RED);
+	}
 
 	if (canAdd)
 	{
-		showUserMsg("Add this to list!", Color3B::GREEN);
-		//TODO:Find if exist
-		assert(false);
+		if (_addState == AddingState::AS_ADD_ANIM)
+		{
+			showUserMsg("Add new anim!", Color3B::GREEN);
+
+			UiCustomEventData d(UiCustomEventType::UCE_ADD_ANIM);
+			d._info = _addFileName->getString();
+			Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(UiCustomEventData::sUiCustomEventName, &d);
+		}
+		else if (_addState == AddingState::AS_ADD_MODEL){
+			showUserMsg("Add new model!", Color3B::GREEN);
+			UiCustomEventData d(UiCustomEventType::UCE_ADD_MODEL);
+			d._info = _addFileName->getString();
+			d._info2 = _addTexName->getString();
+			Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(UiCustomEventData::sUiCustomEventName, &d);
+		}
 	}
 
 	_addFileName->setString("");
@@ -280,6 +304,16 @@ void UiHandler::showAdding(cocos2d::Ref* pSender, AddingState state)
 	if (_addState != AddingState::AS_NONE)
 		return;
 
+	if (state == AddingState::AS_ADD_ANIM){
+		_addTexBg->setVisible(false);
+		_addTexName->setVisible(false);
+	}
+	else if (state == AddingState::AS_ADD_MODEL){
+		_addTexBg->setVisible(true);
+		_addTexName->setVisible(true);
+		_addTexName->setString("");
+	}
+
 	_addState = state;
 	_addDialogImage->setVisible(true);
 }
@@ -290,4 +324,68 @@ void UiHandler::serializeToJson(cocos2d::Ref* pSender)
 
 	//TODO:
 	assert(false);
+}
+
+void UiHandler::deleteModel(cocos2d::Ref* pSender)
+{
+	if (IndexFileParser::s_AnimFileData.size() <= 1){
+		UiHandler::getInstance()->showUserMsg("The only model left here, please don't kill me. >_<");
+		return;
+	}
+
+	//Delete the data source
+	for (auto itr = IndexFileParser::s_AnimFileData.begin(); itr != IndexFileParser::s_AnimFileData.end(); ++itr){
+		if (itr->name == _titleLabel->getString()){
+			IndexFileParser::s_AnimFileData.erase(itr);
+			break;
+		}
+	}
+
+	//Delete from UI view list
+	auto modelItems = _modelListView->getItems();
+	int i = 0;
+	for (; i < modelItems.size(); ++i)	{
+		if (static_cast<ui::Button*>(modelItems.at(i))->getTitleText() == _titleLabel->getString()){
+			break;
+		}
+	}
+	_modelListView->removeItem(i);
+
+	//Delete the ViewTarget data 
+	UiCustomEventData d(UiCustomEventType::UCE_DELETE_MODEL);
+	d._info = _titleLabel->getString();
+	Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(UiCustomEventData::sUiCustomEventName, &d);
+}
+
+void UiHandler::deleteAnim(cocos2d::Ref* pSender)
+{
+	if (_animLabel->getString() == IndexFileParser::s_DefaultAnim){
+		showUserMsg("Can't delete default animation.", Color3B::RED);
+		return;
+	}
+	else{
+		//Delete from data source
+		auto viewData = IndexFileParser::findViewDate(_titleLabel->getString());
+		for (auto itr = viewData->animList.begin(); itr != viewData->animList.end(); ++ itr){
+			if (itr->name == _animLabel->getString()){
+				viewData->animList.erase(itr);
+				break;
+			}
+		}
+
+		//Delete from UI view list
+		auto animItems = _animListView->getItems();
+		int i = 0;
+		for (; i < animItems.size(); ++i)	{
+			if(static_cast<ui::Button*>(animItems.at(i))->getTitleText() == _animLabel->getString()){
+				break;
+			}
+		}
+		_animListView->removeItem(i);
+
+		//Delete from the animation data, and reset the animation show
+		UiCustomEventData d(UiCustomEventType::UCE_DELETE_ANIM);
+		d._info = _animLabel->getString();
+		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(UiCustomEventData::sUiCustomEventName, &d);
+	}
 }

@@ -18,7 +18,6 @@ enum class UiCustomEventType{
 
 	UCE_ADD_MODEL,
 	UCE_ADD_ANIM,
-
 };
 
 class UiCustomEventData{
@@ -31,6 +30,7 @@ public:
 	int						_int1;
 	int						_int2;
 	std::string				_info;
+	std::string				_info2;
 };
 
 
@@ -72,8 +72,10 @@ protected:
 	void modifyAnim(cocos2d::Ref* pSender);
 	void AddNewItem(cocos2d::Ref* pSender);
 	void showAdding(cocos2d::Ref* pSender, AddingState state);
+	void deleteModel(cocos2d::Ref* pSender);
+	void deleteAnim(cocos2d::Ref* pSender);
+	
 	void serializeToJson(cocos2d::Ref* pSender);
-
 
 private:
 
@@ -89,11 +91,15 @@ private:
 	cocos2d::RefPtr<cocos2d::ui::ListView>	_animListView;
 	cocos2d::RefPtr<cocos2d::ui::Button>	_addModelBtn;
 	cocos2d::RefPtr<cocos2d::ui::Button>	_addAnimBtn;
+	cocos2d::RefPtr<cocos2d::ui::Button>	_DelModelBtn;
+	cocos2d::RefPtr<cocos2d::ui::Button>	_DelAnimBtn;
 
 	//Add Model/Anim dialog
 	cocos2d::RefPtr<cocos2d::ui::Widget>	_addDialogImage;	//Image view
 	cocos2d::RefPtr<cocos2d::ui::TextField>	_addFileName;
 	cocos2d::RefPtr<cocos2d::ui::Button>	_addOkBtn;
+	cocos2d::RefPtr<cocos2d::ui::Widget>	_addTexBg;	
+	cocos2d::RefPtr<cocos2d::ui::TextField>	_addTexName;
 
 	//Edit animation
 	cocos2d::RefPtr<cocos2d::ui::TextField>	_FromFrame;

@@ -184,8 +184,8 @@
                 <EndColor A="255" R="255" G="255" B="255" />
                 <ColorVector ScaleY="1.0000" />
               </NodeObjectData>
-              <NodeObjectData Name="model" ActionTag="-1341577659" ZOrder="1" FrameEvent="" Tag="27" ObjectIndex="8" LeftMargin="-50.0000" RightMargin="10.0000" TopMargin="20.0000" BottomMargin="-40.0000" FontSize="20" LabelText="Model" ctype="TextObjectData">
-                <Position X="-10.0000" Y="-40.0000" />
+              <NodeObjectData Name="model" ActionTag="-1341577659" ZOrder="1" FrameEvent="" Tag="27" ObjectIndex="8" LeftMargin="-133.3359" RightMargin="83.3359" TopMargin="15.7578" BottomMargin="-35.7578" FontSize="20" LabelText="Model" ctype="TextObjectData">
+                <Position X="-83.3359" Y="-35.7578" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <AnchorPoint ScaleX="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
@@ -193,8 +193,8 @@
                 <PrePosition X="0.0000" Y="0.0000" />
                 <PreSize X="0.0000" Y="0.0000" />
               </NodeObjectData>
-              <NodeObjectData Name="Text_9" ActionTag="-121905454" FrameEvent="" Tag="28" ObjectIndex="9" LeftMargin="-50.0000" RightMargin="10.0000" TopMargin="260.0000" BottomMargin="-280.0000" FontSize="20" LabelText="Animation" ctype="TextObjectData">
-                <Position X="-10.0000" Y="-280.0000" />
+              <NodeObjectData Name="Text_9" ActionTag="-121905454" FrameEvent="" Tag="28" ObjectIndex="9" HorizontalEdge="RightEdge" VerticalEdge="BottomEdge" LeftMargin="-156.3658" RightMargin="66.3658" TopMargin="257.2731" BottomMargin="-277.2731" FontSize="20" LabelText="Animation" ctype="TextObjectData">
+                <Position X="-66.3658" Y="-277.2731" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <AnchorPoint ScaleX="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
@@ -226,27 +226,27 @@
             <PrePosition X="0.2604" Y="0.0625" />
             <PreSize X="0.0000" Y="0.0000" />
           </NodeObjectData>
-          <NodeObjectData Name="AddAnimBtn" ActionTag="7328864" FrameEvent="" Tag="25" ObjectIndex="5" LeftMargin="750.4392" RightMargin="129.5608" TopMargin="253.1970" BottomMargin="361.8030" TouchEnable="True" FontSize="14" ButtonText="Add Anim" Scale9Enable="True" Scale9Width="46" Scale9Height="36" ctype="ButtonObjectData">
-            <Position X="790.4392" Y="374.3030" />
+          <NodeObjectData Name="AddAnimBtn" ActionTag="7328864" FrameEvent="" Tag="25" ObjectIndex="5" LeftMargin="750.0001" RightMargin="159.9999" TopMargin="255.0000" BottomMargin="360.0000" TouchEnable="True" FontSize="14" ButtonText="Add" Scale9Enable="True" Scale9Width="46" Scale9Height="36" ctype="ButtonObjectData">
+            <Position X="750.0001" Y="360.0000" />
             <Scale ScaleX="1.0000" ScaleY="1.0000" />
-            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <AnchorPoint />
             <CColor A="255" R="255" G="255" B="255" />
-            <Size X="80.0000" Y="25.0000" />
-            <PrePosition X="0.8234" Y="0.5848" />
-            <PreSize X="0.0833" Y="0.0391" />
+            <Size X="50.0000" Y="25.0000" />
+            <PrePosition X="0.7813" Y="0.5625" />
+            <PreSize X="0.0521" Y="0.0391" />
             <TextColor A="255" R="65" G="65" B="70" />
             <DisabledFileData Type="Default" Path="Default/Button_Disable.png" />
             <PressedFileData Type="Default" Path="Default/Button_Press.png" />
             <NormalFileData Type="Default" Path="Default/Button_Normal.png" />
           </NodeObjectData>
-          <NodeObjectData Name="AddModelBtn" ActionTag="-808527849" FrameEvent="" Tag="26" ObjectIndex="6" LeftMargin="748.6201" RightMargin="131.3799" TopMargin="13.3334" BottomMargin="601.6666" TouchEnable="True" FontSize="14" ButtonText="Add Model" Scale9Enable="True" Scale9Width="46" Scale9Height="36" ctype="ButtonObjectData">
-            <Position X="788.6201" Y="614.1666" />
+          <NodeObjectData Name="AddModelBtn" ActionTag="-808527849" FrameEvent="" Tag="26" ObjectIndex="6" LeftMargin="750.4545" RightMargin="159.5455" TopMargin="15.0000" BottomMargin="600.0000" TouchEnable="True" FontSize="14" ButtonText="Add" Scale9Enable="True" Scale9Width="46" Scale9Height="36" ctype="ButtonObjectData">
+            <Position X="750.4545" Y="600.0000" />
             <Scale ScaleX="1.0000" ScaleY="1.0000" />
-            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <AnchorPoint />
             <CColor A="255" R="255" G="255" B="255" />
-            <Size X="80.0000" Y="25.0000" />
-            <PrePosition X="0.8215" Y="0.9596" />
-            <PreSize X="0.0833" Y="0.0391" />
+            <Size X="50.0000" Y="25.0000" />
+            <PrePosition X="0.7817" Y="0.9375" />
+            <PreSize X="0.0521" Y="0.0391" />
             <TextColor A="255" R="65" G="65" B="70" />
             <DisabledFileData Type="Default" Path="Default/Button_Disable.png" />
             <PressedFileData Type="Default" Path="Default/Button_Press.png" />
@@ -274,13 +274,13 @@
             <PrePosition X="0.4722" Y="0.5934" />
             <PreSize X="0.0500" Y="0.0703" />
             <Children>
-              <NodeObjectData Name="addGO" ActionTag="-627069665" FrameEvent="" Tag="30" ObjectIndex="7" LeftMargin="26.0521" RightMargin="-8.0521" TopMargin="15.8658" BottomMargin="-5.8658" TouchEnable="True" FontSize="14" ButtonText="" Scale9Enable="True" Scale9Width="52" Scale9Height="84" ctype="ButtonObjectData">
-                <Position X="41.0521" Y="11.6342" />
+              <NodeObjectData Name="addGO" ActionTag="-627069665" FrameEvent="" Tag="30" ObjectIndex="7" LeftMargin="28.5359" RightMargin="-10.5359" TopMargin="15.1394" BottomMargin="-5.1394" TouchEnable="True" FontSize="14" ButtonText="" Scale9Enable="True" Scale9Width="52" Scale9Height="84" ctype="ButtonObjectData">
+                <Position X="43.5359" Y="12.3606" />
                 <Scale ScaleX="0.2260" ScaleY="0.4609" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <CColor A="255" R="255" G="255" B="255" />
                 <Size X="30.0000" Y="35.0000" />
-                <PrePosition X="0.8553" Y="0.2585" />
+                <PrePosition X="0.9070" Y="0.2747" />
                 <PreSize X="0.6522" Y="0.7609" />
                 <TextColor A="255" R="65" G="65" B="70" />
                 <DisabledFileData Type="Default" Path="Default/Button_Disable.png" />
@@ -297,17 +297,62 @@
                 <PreSize X="0.8333" Y="0.2222" />
                 <FileData Type="Normal" Path="Button_Normal.png" />
               </NodeObjectData>
-              <NodeObjectData Name="addNameText" ActionTag="-1163054240" FrameEvent="" Tag="37" ObjectIndex="5" LeftMargin="4.0688" RightMargin="-221.0688" TopMargin="-5.9242" BottomMargin="23.9242" TouchEnable="True" FontSize="20" IsCustomSize="True" LabelText="" PlaceHolderText="Click here to input" MaxLengthText="10" ctype="TextFieldObjectData">
-                <Position X="4.0688" Y="23.9242" />
+              <NodeObjectData Name="addNameText" ActionTag="-1163054240" FrameEvent="" Tag="37" ObjectIndex="5" LeftMargin="4.0000" RightMargin="-221.0000" TopMargin="-7.0000" BottomMargin="25.0000" TouchEnable="True" FontSize="20" IsCustomSize="True" LabelText="" PlaceHolderText="Click here to input name" MaxLengthText="10" ctype="TextFieldObjectData">
+                <Position X="4.0000" Y="25.0000" />
                 <Scale ScaleX="0.1501" ScaleY="0.4058" />
                 <AnchorPoint />
                 <CColor A="255" R="0" G="16" B="255" />
                 <Size X="265.0000" Y="27.0000" />
-                <PrePosition X="0.0848" Y="0.5316" />
+                <PrePosition X="0.0833" Y="0.5556" />
                 <PreSize X="5.5208" Y="0.6000" />
+              </NodeObjectData>
+              <NodeObjectData Name="addForTexBg" ActionTag="-1862041543" RotationSkewY="180.0000" FrameEvent="" Tag="33" ObjectIndex="8" LeftMargin="-31.0000" RightMargin="44.0000" TopMargin="25.0046" BottomMargin="9.9954" Scale9Width="46" Scale9Height="36" ctype="ImageViewObjectData">
+                <Position X="4.0000" Y="9.9954" />
+                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <AnchorPoint ScaleX="1.0000" />
+                <CColor A="255" R="227" G="227" B="180" />
+                <Size X="35.0000" Y="10.0000" />
+                <PrePosition X="0.0833" Y="0.2221" />
+                <PreSize X="0.7292" Y="0.2222" />
+                <FileData Type="Normal" Path="Button_Normal.png" />
+              </NodeObjectData>
+              <NodeObjectData Name="addForTex" ActionTag="1945102502" FrameEvent="" Tag="32" ObjectIndex="6" LeftMargin="3.8380" RightMargin="-195.8380" TopMargin="9.2991" BottomMargin="8.7009" TouchEnable="True" FontSize="20" IsCustomSize="True" LabelText="" PlaceHolderText="Click to input tex name" MaxLengthText="10" ctype="TextFieldObjectData">
+                <Position X="3.8380" Y="8.7009" />
+                <Scale ScaleX="0.1400" ScaleY="0.4400" />
+                <AnchorPoint />
+                <CColor A="255" R="0" G="16" B="255" />
+                <Size X="240.0000" Y="27.0000" />
+                <PrePosition X="0.0800" Y="0.1934" />
+                <PreSize X="5.0000" Y="0.6000" />
               </NodeObjectData>
             </Children>
             <FileData Type="Normal" Path="Button_Normal.png" />
+          </NodeObjectData>
+          <NodeObjectData Name="DelAnim" ActionTag="-1425239060" FrameEvent="" Tag="30" ObjectIndex="8" LeftMargin="898.6353" RightMargin="11.3647" TopMargin="255.0000" BottomMargin="360.0000" TouchEnable="True" FontSize="14" ButtonText="Del" Scale9Enable="True" Scale9Width="46" Scale9Height="36" ctype="ButtonObjectData">
+            <Position X="898.6353" Y="360.0000" />
+            <Scale ScaleX="1.0000" ScaleY="1.0000" />
+            <AnchorPoint />
+            <CColor A="255" R="255" G="255" B="255" />
+            <Size X="50.0000" Y="25.0000" />
+            <PrePosition X="0.9361" Y="0.5625" />
+            <PreSize X="0.0521" Y="0.0391" />
+            <TextColor A="255" R="239" G="32" B="24" />
+            <DisabledFileData Type="Default" Path="Default/Button_Disable.png" />
+            <PressedFileData Type="Default" Path="Default/Button_Press.png" />
+            <NormalFileData Type="Default" Path="Default/Button_Normal.png" />
+          </NodeObjectData>
+          <NodeObjectData Name="DelModel" ActionTag="-649779063" FrameEvent="" Tag="31" ObjectIndex="9" LeftMargin="898.8005" RightMargin="11.1995" TopMargin="15.0000" BottomMargin="600.0000" TouchEnable="True" FontSize="14" ButtonText="Del" Scale9Enable="True" Scale9Width="46" Scale9Height="36" ctype="ButtonObjectData">
+            <Position X="898.8005" Y="600.0000" />
+            <Scale ScaleX="1.0000" ScaleY="1.0000" />
+            <AnchorPoint />
+            <CColor A="255" R="255" G="255" B="255" />
+            <Size X="50.0000" Y="25.0000" />
+            <PrePosition X="0.9363" Y="0.9375" />
+            <PreSize X="0.0521" Y="0.0391" />
+            <TextColor A="255" R="239" G="32" B="24" />
+            <DisabledFileData Type="Default" Path="Default/Button_Disable.png" />
+            <PressedFileData Type="Default" Path="Default/Button_Press.png" />
+            <NormalFileData Type="Default" Path="Default/Button_Normal.png" />
           </NodeObjectData>
         </Children>
       </ObjectData>

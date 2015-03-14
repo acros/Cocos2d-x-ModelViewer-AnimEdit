@@ -1,10 +1,3 @@
-/*
-	Author: Zhao Zhihui
-	Data:	2015.3.3
-	github:	https://github.com/acros
-	Email:	inary88@gmail.com
-*/
-
 #ifndef __ANIM_INDEX_FILE_PARSER_H__
 #define __ANIM_INDEX_FILE_PARSER_H__
 
@@ -12,13 +5,14 @@
 
 using std::string;
 
-struct AnimFileData{
+struct ResourceData{
 	string name;
 	string modelFile;
 	string texFile;
 	string animFile;
 
 	struct AnimFrames{
+		AnimFrames(const string& n, int f, int e) :name(n), start(f), end(e)	{}
 		AnimFrames() :start(0), end(0)	{}
 		string name;
 		int start;
@@ -26,7 +20,7 @@ struct AnimFileData{
 	};
 	std::vector<AnimFrames>	animList;
 };
-typedef std::vector<AnimFileData>	AnimFileDataList;
+typedef std::vector<ResourceData>	ResourceDataList;
 
 
 class IndexFileParser{
@@ -35,13 +29,14 @@ protected:
 	~IndexFileParser();
 
 public:
+	static ResourceData*	loadNewModel(const std::string& filePath, const std::string& text = "");
 
-	static AnimFileDataList*	parseIndexFile(const std::string&	filePath);
+	static ResourceDataList*	parseIndexFile(const std::string&	filePath);
 
-	static AnimFileData::AnimFrames*	findAnim(const std::string&	modelName, const std::string& animName);
-	static AnimFileData*	findViewDate(const std::string& modelName);
+	static ResourceData::AnimFrames*	findAnim(const std::string&	modelName, const std::string& animName);
+	static ResourceData*				findViewDate(const std::string& modelName);
 
-	static AnimFileDataList		s_AnimFileData;
+	static ResourceDataList		s_AnimFileData;
 	static const float			sFrameRate;
 	static const std::string	s_DefaultAnim;
 

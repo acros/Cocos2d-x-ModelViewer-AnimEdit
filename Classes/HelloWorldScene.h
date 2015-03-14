@@ -15,7 +15,7 @@ public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();  
 
-	void loadModel(AnimFileDataList& animFileList);
+	void loadModel(ResourceDataList& animFileList);
 
     void initCamera();
 
@@ -53,7 +53,6 @@ private:
 	void addViewTarget(ViewTarget*	newTarget);
 	void updateUiAnimList();
 
-
     cocos2d::Camera *_camera;
     cocos2d::Layer *_layer;
 
@@ -67,7 +66,7 @@ private:
     cocos2d::Vec2 _preMouseLocation;
 
 
-	int		m_SpriteIndex;
+	int		_currViewTargetIdx;
 	cocos2d::Vector<ViewTarget*>	_viewTargetList;
 };
 

@@ -7,9 +7,9 @@ USING_NS_CC;
 const float IndexFileParser::sFrameRate = 30.f;
 const std::string IndexFileParser::s_DefaultAnim = "Default Animation";
 
-AnimFileDataList IndexFileParser::s_AnimFileData;
+ResourceDataList IndexFileParser::s_AnimFileData;
 
-AnimFileDataList* IndexFileParser::parseIndexFile(const std::string& filePath)
+ResourceDataList* IndexFileParser::parseIndexFile(const std::string& filePath)
 {
 	std::string contentStr = FileUtils::getInstance()->getStringFromFile(filePath);
 
@@ -28,7 +28,7 @@ AnimFileDataList* IndexFileParser::parseIndexFile(const std::string& filePath)
 		rapidjson::Value& nodeValue = na[i];
 
 		//Parse node context
-		AnimFileData	t;
+		ResourceData	t;
 		if (nodeValue.HasMember("model")){
 			t.modelFile = nodeValue["model"].GetString();
 		}
@@ -48,7 +48,7 @@ AnimFileDataList* IndexFileParser::parseIndexFile(const std::string& filePath)
 		if (nodeValue.HasMember("sec") && nodeValue["sec"].IsArray()){
 			rapidjson::Value& secValue = nodeValue["sec"][0u];
 			for (auto itr = secValue.MemberonBegin(); itr != secValue.MemberonEnd(); ++itr){
-				AnimFileData::AnimFrames secFrame;
+				ResourceData::AnimFrames secFrame;
 				secFrame.name = itr->name.GetString();
 				if (itr->value.IsArray()){
 					secFrame.start = itr->value[0u].GetInt();
@@ -75,7 +75,7 @@ AnimFileDataList* IndexFileParser::parseIndexFile(const std::string& filePath)
 // 	}
 // }
 
-AnimFileData::AnimFrames* IndexFileParser::findAnim(const std::string& modelName, const std::string& animName)
+ResourceData::AnimFrames* IndexFileParser::findAnim(const std::string& modelName, const std::string& animName)
 {
 	auto itr = s_AnimFileData.begin();
 	for (; itr != s_AnimFileData.end(); ++itr)
@@ -95,7 +95,7 @@ AnimFileData::AnimFrames* IndexFileParser::findAnim(const std::string& modelName
 	return nullptr;
 }
 
-AnimFileData* IndexFileParser::findViewDate(const std::string& modelName)
+ResourceData* IndexFileParser::findViewDate(const std::string& modelName)
 {
 	for (auto itr = s_AnimFileData.begin(); itr != s_AnimFileData.end(); ++itr)
 	{
@@ -104,6 +104,35 @@ AnimFileData* IndexFileParser::findViewDate(const std::string& modelName)
 	}
 
 	return nullptr;
+}
+
+
+ResourceData* IndexFileParser::loadNewModel(const std::string& filePath, const std::string& tex /*= ""*/)
+{
+	ResourceData newData;
+
+	newData.name = filePath;
+
+	FileUtils::getInstance()->addSearchPath("data/" + filePath);
+	if (FileUtils::getInstance()->isFileExist(filePath + ".c3t")){
+		newData.modelFile = filePath + ".c3t";
+	}
+	if (FileUtils::getInstance()->isFileExist(filePath + ".c3b")){
+		newData.modelFile = filePath + ".c3b";
+	}
+
+	if (!tex.empty()){
+		newData.texFile = tex;
+	}
+
+	if (newData.modelFile.empty())
+		return nullptr;
+
+	newData.animFile = newData.modelFile;
+
+	s_AnimFileData.push_back(newData);
+
+	return &(s_AnimFileData.back());
 }
 
 

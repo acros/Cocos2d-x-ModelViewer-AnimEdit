@@ -17,7 +17,7 @@ CC_CONSTRUCTOR_ACCESS:
 public:
 	CREATE_FUNC(ViewTarget);
 
-	bool	load(AnimFileData&	animFile);
+	bool	load(ResourceData&	animFile);
 
 	cocos2d::Node*	getNode()const;
 
@@ -36,8 +36,11 @@ public:
 	int	getMaxFrame()const { return _MaxAnimFrame; }
 	void recreateCurrentAnim(int from, int to);
 
+	void addNewAnimSection(const std::string& newAnimName);
+	void removeCurrentAnim();
+
 protected:
-	void	parseAnimSection(const AnimFileData&	animFile, cocos2d::Animation3D* anim);
+	void	parseAnimSection(const ResourceData&	animFile, cocos2d::Animation3D* anim);
 
 	float			_orginDistance;
 	cocos2d::Vec3	_orginCenter;

@@ -1,5 +1,6 @@
 #include "ViewTarget.h"
 #include "UiHandler.h"
+#include "IndexFileParser.h"
 
 USING_NS_CC;
 
@@ -20,7 +21,7 @@ ViewTarget::~ViewTarget()
 
 }
 
-bool ViewTarget::load(AnimFileData& fileIdx)
+bool ViewTarget::load(ResourceData& fileIdx)
 {
 	if (fileIdx.texFile.empty())
 		_Sprite3d = Sprite3D::create(fileIdx.modelFile);
@@ -72,8 +73,10 @@ cocos2d::Node* ViewTarget::getNode() const
 
 void ViewTarget::switchAnim(int step)
 {
-	//if (animName != _currAnim->first)
 	if (step == 0)
+		return;
+
+	if (_AnimList.size() <= 1)
 		return;
 
 	assert(step == 1 || step == -1);
@@ -107,6 +110,9 @@ void ViewTarget::switchAnim(int step)
 
 void ViewTarget::switchAnim(const std::string& animName)
 {
+	if (_AnimList.size() <= 1)
+		return;
+
 	for (auto itr = _AnimList.begin(); itr != _AnimList.end();	++itr){
 		if (itr->first == animName)	{
 			_currAnim = itr;
@@ -126,7 +132,7 @@ void ViewTarget::switchAnim(const std::string& animName)
 	}
 }
 
-void ViewTarget::parseAnimSection(const AnimFileData& animFile, Animation3D* anim)
+void ViewTarget::parseAnimSection(const ResourceData& animFile, Animation3D* anim)
 {
 	for (auto it = animFile.animList.begin(); it != animFile.animList.end(); ++it){
 		auto animate = Animate3D::createWithFrames(anim, it->start, it->end);
@@ -171,4 +177,27 @@ void ViewTarget::recreateCurrentAnim(int from, int to)
 	_AnimList.erase(_currAnim);
 	_AnimList.insert(animData->name, animate);
 	_currAnim = _AnimList.find(animData->name);
+}
+
+void ViewTarget::addNewAnimSection(const std::string& newAnimName)
+{
+	//For display
+	auto _currAnimName = _currAnim->first;
+	auto defaultAnim = _AnimList.find(IndexFileParser::s_DefaultAnim);
+	auto newAnim = defaultAnim->second->clone();
+	_AnimList.insert(newAnimName, newAnim);		
+	_currAnim = _AnimList.find(_currAnimName);
+
+	//For data
+	IndexFileParser::findViewDate(_name)->animList.push_back(ResourceData::AnimFrames(newAnimName,0,_MaxAnimFrame));
+
+	//For UI
+	UiHandler::getInstance()->addAnimToViewList(newAnimName);
+}
+
+void ViewTarget::removeCurrentAnim()
+{
+	auto currAnimName = _currAnim->first;
+	_AnimList.erase(_currAnim);
+	switchAnim(IndexFileParser::s_DefaultAnim);
 }
