@@ -37,7 +37,7 @@ public:
 	void recreateCurrentAnim(int from, int to);
 
 	void addNewAnimSection(const std::string& newAnimName);
-	void removeCurrentAnim();
+	bool removeCurrentAnim();
 
 protected:
 	void	parseAnimSection(const ResourceData&	animFile, cocos2d::Animation3D* anim);

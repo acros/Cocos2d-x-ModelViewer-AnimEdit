@@ -19,6 +19,7 @@ struct ResourceData{
 		int end;
 	};
 	std::vector<AnimFrames>	animList;
+
 };
 typedef std::vector<ResourceData>	ResourceDataList;
 
@@ -32,6 +33,7 @@ public:
 	static ResourceData*	loadNewModel(const std::string& filePath, const std::string& text = "");
 
 	static ResourceDataList*	parseIndexFile(const std::string&	filePath);
+	static bool					serializeToFile();
 
 	static ResourceData::AnimFrames*	findAnim(const std::string&	modelName, const std::string& animName);
 	static ResourceData*				findViewDate(const std::string& modelName);
@@ -40,6 +42,10 @@ public:
 	static const float			sFrameRate;
 	static const std::string	s_DefaultAnim;
 
+private:
+	static bool	_InSerializing;
+
+	static std::string	_DataFileName;
 };
 
 #endif

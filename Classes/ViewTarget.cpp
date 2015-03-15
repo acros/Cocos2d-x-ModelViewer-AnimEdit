@@ -110,8 +110,10 @@ void ViewTarget::switchAnim(int step)
 
 void ViewTarget::switchAnim(const std::string& animName)
 {
-	if (_AnimList.size() <= 1)
+	if (_AnimList.size() == 1){
+		_currAnim = _AnimList.begin();
 		return;
+	}
 
 	for (auto itr = _AnimList.begin(); itr != _AnimList.end();	++itr){
 		if (itr->first == animName)	{
@@ -195,9 +197,13 @@ void ViewTarget::addNewAnimSection(const std::string& newAnimName)
 	UiHandler::getInstance()->addAnimToViewList(newAnimName);
 }
 
-void ViewTarget::removeCurrentAnim()
+bool ViewTarget::removeCurrentAnim()
 {
+	if (_AnimList.size() <= 1)
+		return false;
+
 	auto currAnimName = _currAnim->first;
 	_AnimList.erase(_currAnim);
 	switchAnim(IndexFileParser::s_DefaultAnim);
+	return true;
 }

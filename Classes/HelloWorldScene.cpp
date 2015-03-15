@@ -338,8 +338,10 @@ void ModelViewer::onUiCustomEvent(cocos2d::EventCustom* event)
 		break;
 	case UiCustomEventType::UCE_DELETE_ANIM:
 	{
-		_viewTargetList.at(_currViewTargetIdx)->removeCurrentAnim();
-		UiHandler::getInstance()->showUserMsg("Animation deleted.", Color3B::GREEN);
+		if(_viewTargetList.at(_currViewTargetIdx)->removeCurrentAnim())
+			UiHandler::getInstance()->showUserMsg("Animation deleted.", Color3B::GREEN);
+		else
+			UiHandler::getInstance()->showUserMsg("Can't delete default animation.", Color3B::RED);
 	}
 		break;
 

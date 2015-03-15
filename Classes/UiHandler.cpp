@@ -320,10 +320,11 @@ void UiHandler::showAdding(cocos2d::Ref* pSender, AddingState state)
 
 void UiHandler::serializeToJson(cocos2d::Ref* pSender)
 {
-	showUserMsg("Function not finished yet.", Color3B::YELLOW);
+	if (IndexFileParser::serializeToFile())
+		showUserMsg("File saved.", Color3B::GREEN);
+	else
+		showUserMsg("Can't save to file!!!", Color3B::RED);
 
-	//TODO:
-	assert(false);
 }
 
 void UiHandler::deleteModel(cocos2d::Ref* pSender)
