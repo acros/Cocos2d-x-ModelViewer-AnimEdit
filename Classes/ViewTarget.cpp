@@ -89,10 +89,10 @@ void ViewTarget::switchAnim(int step)
 	}
 	else {
 		if (_currAnim == _AnimList.begin()){
-			_currAnim = (--_AnimList.end());
+//			_currAnim = (--_AnimList.end());
 		}
-		else
-			--_currAnim;
+//		else
+//			--_currAnim;
 	}
 
 	_Sprite3d->stopAllActions();
