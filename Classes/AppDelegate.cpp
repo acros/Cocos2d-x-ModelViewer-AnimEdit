@@ -3,10 +3,17 @@
 
 USING_NS_CC;
 
-AppDelegate::AppDelegate(const std::string &filePath)
-    : _modelFilePath(filePath)
+AppDelegate::AppDelegate()
+    : _modelFilePath("config.json")
 {
 
+}
+
+//Hard-code
+AppDelegate::AppDelegate(const std::string& fileName)
+: _modelFilePath("config.json")
+{
+    
 }
 
 AppDelegate::~AppDelegate() 

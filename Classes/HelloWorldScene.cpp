@@ -137,6 +137,7 @@ void ModelViewer::onMouseMovedThis( Event* event )
     EventMouse *em = dynamic_cast<EventMouse *>(event);
     if (em)
     {
+        
         if (em->getMouseButton() == GLFW_MOUSE_BUTTON_RIGHT)
         {
             Size visibleSize = Director::getInstance()->getVisibleSize();
@@ -148,6 +149,7 @@ void ModelViewer::onMouseMovedThis( Event* event )
         }
 
         _preMouseLocation = em->getLocation();
+        
     }
 }
 
