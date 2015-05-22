@@ -45,6 +45,8 @@ bool ViewTarget::load(ResourceData& fileIdx)
 		}
 
 		AABB aabb = _Sprite3d->getAABB();
+		_obbt = OBB(aabb);
+
 		Vec3 corners[8];
 		aabb.getCorners(corners);
 		//temporary method, replace it
@@ -66,7 +68,7 @@ bool ViewTarget::load(ResourceData& fileIdx)
 	return true;
 }
 
-cocos2d::Node* ViewTarget::getNode() const
+Sprite3D* ViewTarget::getNode() const
 {
 	return _Sprite3d;
 }
@@ -206,4 +208,49 @@ bool ViewTarget::removeCurrentAnim()
 	_AnimList.erase(_currAnim);
 	switchAnim(IndexFileParser::s_DefaultAnim);
 	return true;
+}
+
+void ViewTarget::setDrawingBoundingBox(bool state)
+{
+	if (state)
+	{
+		if (_drawDebug == nullptr)
+			_drawDebug = DrawNode3D::create();
+
+		_drawDebug->setCameraMask((unsigned short)CameraFlag::USER1);
+		_Sprite3d->addChild(_drawDebug);
+	}
+	else
+	{
+		if (!_drawDebug)
+		{
+			_Sprite3d->removeChild(_drawDebug);
+		}
+
+		_drawDebug = nullptr;
+	}
+}
+
+void ViewTarget::update(float dt)
+{
+	if (_drawDebug)
+	{
+		_drawDebug->clear();
+
+		Mat4 mat = _Sprite3d->getNodeToWorldTransform();
+		mat.getRightVector(&_obbt._xAxis);
+		_obbt._xAxis.normalize();
+
+		mat.getUpVector(&_obbt._yAxis);
+		_obbt._yAxis.normalize();
+
+		mat.getForwardVector(&_obbt._zAxis);
+		_obbt._zAxis.normalize();
+
+		_obbt._center = _Sprite3d->getPosition3D();
+
+		Vec3 corners[8] = {};
+		_obbt.getCorners(corners);
+		_drawDebug->drawCube(corners, Color4F(0, 1, 0, 1));
+	}
 }

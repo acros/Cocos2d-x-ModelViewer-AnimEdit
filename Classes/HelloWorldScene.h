@@ -19,6 +19,8 @@ public:
 
     void initCamera();
 
+	virtual void update(float dt)override;
+
     // implement the "static create()" method manually
     CREATE_FUNC(ModelViewer);
 
@@ -27,9 +29,12 @@ CC_CONSTRUCTOR_ACCESS:
     virtual ~ModelViewer();
 
 protected:
+	void onEnter()override;
+	void onExit()override;
 
 	void onUiCustomEvent(cocos2d::EventCustom* event);
 
+	void toggleDebugDraw();
 
     void onTouchsMovedThis(const std::vector<cocos2d::Touch*> &touchs, cocos2d::Event *event);
     void onMouseScrollThis(cocos2d::Event* event);
@@ -50,6 +55,8 @@ protected:
 	void updateCameraSet();
 
 private:
+	bool _debugDraw;
+
 	void addViewTarget(ViewTarget*	newTarget);
 	void updateUiAnimList();
 
@@ -64,7 +71,6 @@ private:
     cocos2d::Quaternion _rotation;
     cocos2d::Vec3 _center;
     cocos2d::Vec2 _preMouseLocation;
-
 
 	int		_currViewTargetIdx;
 	cocos2d::Vector<ViewTarget*>	_viewTargetList;

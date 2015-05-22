@@ -13,6 +13,9 @@
     <Filter Include="ViewerUtils">
       <UniqueIdentifier>{6b530705-a64d-409b-8eed-3c38976af259}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ViewerUtils\NodeDraw">
+      <UniqueIdentifier>{2bdbcd8e-e4c3-44f3-8f03-8ea73f0c307d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -29,6 +32,9 @@
     <ClCompile Include="..\Classes\UiHandler.cpp">
       <Filter>ViewerUtils</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\NodeDraw\DrawNode3D.cpp">
+      <Filter>ViewerUtils\NodeDraw</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -44,6 +50,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\UiHandler.h">
       <Filter>ViewerUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\NodeDraw\DrawNode3D.h">
+      <Filter>ViewerUtils\NodeDraw</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -85,6 +85,7 @@ ModelViewer::ModelViewer()
     , _layer(nullptr)
     , _distance(0.0f)
     , _trackballSize(1.0f)
+	, _debugDraw(false)
 {
 
 }
@@ -217,6 +218,9 @@ void ModelViewer::onKeyPressedThis( EventKeyboard::KeyCode keycode, Event *event
 	case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
 			changeAnim(1);
 		break;
+	case EventKeyboard::KeyCode::KEY_F12:
+		toggleDebugDraw();
+		break;
     default:
         break;
     }
@@ -263,8 +267,8 @@ void ModelViewer::changeViewTarget(int stepLength)
 	}
 
 	addChild(_viewTargetList.at(_currViewTargetIdx)->getNode());
-	updateCameraSet();
 
+	updateCameraSet();
 	updateUiAnimList();
 }
 
@@ -280,8 +284,8 @@ void ModelViewer::changeViewTarget(const std::string& targetName)
 			UiHandler::getInstance()->clearAnimViewList();
 			_currViewTargetIdx = i;
 			addChild(_viewTargetList.at(_currViewTargetIdx)->getNode());
-			updateCameraSet();
 
+			updateCameraSet();
 			updateUiAnimList();
 			break;
 		}
@@ -394,3 +398,35 @@ void ModelViewer::updateUiAnimList()
 	changeAnim(IndexFileParser::s_DefaultAnim);
 	UiHandler::getInstance()->setAnimName(IndexFileParser::s_DefaultAnim, 0, _viewTargetList.at(_currViewTargetIdx)->getMaxFrame());
 }
+
+void ModelViewer::update(float dt)
+{
+	if (_currViewTargetIdx >=0 && _currViewTargetIdx < _viewTargetList.size())
+	{
+		_viewTargetList.at(_currViewTargetIdx)->update(dt);
+	}
+}
+
+void ModelViewer::onEnter()
+{
+	Layer::onEnter();
+
+	scheduleUpdate();
+}
+
+void ModelViewer::onExit()
+{
+	Layer::onExit();
+
+	unscheduleUpdate();
+}
+
+void ModelViewer::toggleDebugDraw()
+{
+	if (_currViewTargetIdx >= 0 && _currViewTargetIdx < _viewTargetList.size())
+	{
+		_debugDraw = !_debugDraw;
+		_viewTargetList.at(_currViewTargetIdx)->setDrawingBoundingBox(_debugDraw);
+	}
+}
+

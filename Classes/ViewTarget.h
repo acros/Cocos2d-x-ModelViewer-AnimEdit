@@ -3,9 +3,12 @@
 
 #include "cocos2d.h"
 #include "IndexFileParser.h"
+#include "NodeDraw/DrawNode3D.h"
 
 typedef cocos2d::Map<std::string, cocos2d::Animate3D*>::iterator	AnimMapIter;
 typedef cocos2d::Map<std::string, cocos2d::Animate3D*>		AnimMap;
+
+USING_NS_CC;
 
 class ViewTarget : public cocos2d::Ref{
 CC_CONSTRUCTOR_ACCESS:
@@ -19,7 +22,7 @@ public:
 
 	bool	load(ResourceData&	animFile);
 
-	cocos2d::Node*	getNode()const;
+	Sprite3D*	getNode()const;
 
 	float	getCamDistance()const	{ return _orginDistance; }
 	const	cocos2d::Vec3&	getCamCenter()const	{ return _orginCenter; }
@@ -39,13 +42,19 @@ public:
 	void addNewAnimSection(const std::string& newAnimName);
 	bool removeCurrentAnim();
 
+	void setDrawingBoundingBox(bool state);
+
+	void update(float dt);
+
 protected:
 	void	parseAnimSection(const ResourceData&	animFile, cocos2d::Animation3D* anim);
 
 	float			_orginDistance;
-	cocos2d::Vec3	_orginCenter;
+	Vec3			_orginCenter;
 
-	cocos2d::RefPtr<cocos2d::Sprite3D>	_Sprite3d;
+	RefPtr<Sprite3D>	_Sprite3d;
+	OBB					_obbt;
+	RefPtr<DrawNode3D>  _drawDebug;
 
 	std::string	_name;
 	std::string _modelName;
