@@ -12,7 +12,8 @@ Read data from config.json , or use command line to select a file as source.
 Keyboard:
 	Use arrow key to switch Model/Animation.
 
-
+ScreenSsot
+![](image/screenshot.png)
 ---------------------------------------------
 ## ModelViewer version 0.1 ##
 It is for cocos2d-x after version v3.3
