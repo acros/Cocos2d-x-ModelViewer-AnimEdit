@@ -5,14 +5,14 @@ For cocos2d-x after version 3.4
 
 Read data from config.json , or use command line to select a file as source.
 
- Command line: 	
+###Command line
 	cd [path of ModelViewer]
 	./ModelViewer JSON_DATA_PATH
 
-Keyboard:
+###Keyboard
 	Use arrow key to switch Model/Animation.
 
-ScreenSsot
+###ScreenShot
 ![](image/screenshot.png)
 ---------------------------------------------
 ## ModelViewer version 0.1 ##
