@@ -138,11 +138,11 @@ void UiHandler::setAnimName(const std::string& animName,int from,int to)
 	_animLabel->setString(animName);
 
 	char text[25];
-//	_itoa(from, text, 10);
-	_FromFrame->setString("Test");
+	_itoa(from, text, 10);
+	_FromFrame->setString(text);
 
-//	_itoa(to, text, 10);
-	_ToFrame->setString("Test");
+	_itoa(to, text, 10);
+	_ToFrame->setString(text);
 }
 
 void UiHandler::addModelToViewList(const std::string& modelName)
